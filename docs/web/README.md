@@ -71,9 +71,9 @@ After every step:
    - `src/services/deviceInfo.ts` (+ `.web.ts`): `getVersion`, `isTablet`, `isEmulatorSync`.
    - `NotificationService.web.ts`: no-op.
    - `sentry.web.ts`: no-op for now.
-   - `services/apiBaseUrl` (+ `.web`): relative `/api/v2` behind the dev proxy.
+   - `src/services/cmsRequestUrl.ts` (+ `.web.ts`): identity on native; on web the CMS URL becomes a same-origin path (`/api/v2/...`) that the dev server proxies.
 3. Update the imports in `Storage.tsx`, `storageUtils.ts`, `UserVocabularyProcessScreen.tsx`, `axios.ts`, `BottomTabNavigator.tsx`, `VolumeService.tsx` and `VersionPressable.tsx`.
-4. Add `"dom"` to the tsconfig `lib`, and add jest specs for the web adapters (imported explicitly).
+4. Add jest specs for the web adapters (imported explicitly). The `dom` lib is not needed yet (`URL` comes from the Node types); it moves to step 5, where `AudioPlayer.web.tsx` needs browser types.
 5. Verify: native tests stay green. The web preview mounts `StorageProvider` and data from `GET jobs` appears through the proxy.
 
 **Step 4: Real app shell on web with pruned navigators.**

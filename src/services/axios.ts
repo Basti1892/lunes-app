@@ -1,9 +1,10 @@
 import axios, { AxiosResponse } from 'axios'
 import { buildKeyGenerator, setupCache } from 'axios-cache-interceptor'
 import { Platform } from 'react-native'
-import DeviceInfo from 'react-native-device-info'
 
 import { getStorageItem } from './Storage'
+import { toCmsRequestUrl } from './cmsRequestUrl'
+import { getVersion } from './deviceInfo'
 
 export const localhostCMSAndroid = 'http://10.0.2.2:8080/api/v2'
 export const localhostCMSIOS = 'http://localhost:8080/api/v2'
@@ -32,7 +33,7 @@ const rawInstance = axios.create({
   headers: {
     'X-os': Platform.OS,
     'X-os-version': Platform.Version,
-    'X-app-version': DeviceInfo.getVersion(),
+    'X-app-version': getVersion(),
   },
 })
 
@@ -42,7 +43,7 @@ const instance = setupCache(rawInstance, {
 
 const getUrl = async (endpoint: string): Promise<string> => {
   const baseURL = getBaseURL(await getStorageItem('cmsUrlOverwrite'))
-  return `${baseURL}/${endpoint}`
+  return toCmsRequestUrl(`${baseURL}/${endpoint}`)
 }
 
 export const getFromEndpoint = async <T>(endpoint: string, apiKey?: string, noCache?: boolean): Promise<T> => {

@@ -1,4 +1,3 @@
-import { DocumentDirectoryPath } from '@dr.pogodin/react-native-fs'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import React, { createContext, ReactElement } from 'react'
 
@@ -10,6 +9,7 @@ import { UserVocabularyItem } from '../models/VocabularyItem'
 import { AnalyticsConsent } from './AnalyticsService'
 import { WordNodeCard } from './RepetitionService'
 import { CMS } from './axios'
+import { DocumentDirectoryPath } from './fileSystem'
 import { migrateStorage } from './storageUtils'
 
 export const STORAGE_VERSION = 8

@@ -1,4 +1,3 @@
-import { moveFile, unlink } from '@dr.pogodin/react-native-fs'
 import { RouteProp } from '@react-navigation/native'
 import { StackNavigationProp } from '@react-navigation/stack'
 import React, { ReactElement, useEffect, useState } from 'react'
@@ -19,6 +18,7 @@ import { useStorageCache } from '../../hooks/useStorage'
 import { UserVocabularyId } from '../../models/VocabularyItem'
 import { RoutesParams } from '../../navigation/NavigationTypes'
 import { getUserVocabularyFileUri } from '../../services/Storage'
+import { moveFile, unlink } from '../../services/fileSystem'
 import { getLabels } from '../../services/helpers'
 import { reportError } from '../../services/sentry'
 import {

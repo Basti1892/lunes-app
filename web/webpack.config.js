@@ -74,6 +74,14 @@ module.exports = (_env, argv) => {
     devServer: {
       port: 8080,
       historyApiFallback: true,
+      // The CMS sends no CORS headers, so API requests go through the dev server (docs/web/0007-backend-access-and-cors.md)
+      proxy: [
+        {
+          context: ['/api'],
+          target: process.env.LUNES_CMS_ORIGIN ?? 'https://lunes-test.tuerantuer.org',
+          changeOrigin: true,
+        },
+      ],
       client: { overlay: { errors: true, warnings: false } },
     },
   }

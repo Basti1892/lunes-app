@@ -1,4 +1,3 @@
-import { unlink } from '@dr.pogodin/react-native-fs'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
 import { StandardExerciseKey, Favorite, VocabularyNote } from '../constants/data'
@@ -19,6 +18,7 @@ import { RepetitionService } from './RepetitionService'
 import type { WordNodeCard } from './RepetitionService'
 import { getFileName, getStorageItem, getStorageItemOr, STORAGE_VERSION, StorageCache } from './Storage'
 import { CMS_URLS } from './axios'
+import { unlink } from './fileSystem'
 import { calculateScore } from './helpers'
 
 export const FAVORITES_KEY_VERSION_0 = 'favorites'

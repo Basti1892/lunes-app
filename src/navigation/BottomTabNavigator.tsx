@@ -1,12 +1,12 @@
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import React, { ReactElement } from 'react'
-import { isTablet } from 'react-native-device-info'
 import { useTheme } from 'styled-components/native'
 
 import { HeartIcon, HomeIcon, MagnifierIcon, RepeatIcon } from '../../assets/images'
 import AnalyticsConsentModal from '../components/AnalyticsConsentModal'
 import useRepetitionService from '../hooks/useRepetitionService'
 import useStorage from '../hooks/useStorage'
+import { isTablet } from '../services/deviceInfo'
 import { getLabels } from '../services/helpers'
 import DictionaryStackNavigator from './DictionaryStackNavigator'
 import HomeStackNavigator from './HomeStackNavigator'

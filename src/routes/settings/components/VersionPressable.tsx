@@ -1,8 +1,8 @@
 import React, { useState, ReactElement } from 'react'
-import { getVersion } from 'react-native-device-info'
 import styled from 'styled-components/native'
 
 import { ContentSecondary } from '../../../components/text/Content'
+import { getVersion } from '../../../services/deviceInfo'
 import { getLabels } from '../../../services/helpers'
 
 const Version = styled.Pressable`

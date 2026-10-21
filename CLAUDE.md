@@ -25,7 +25,8 @@ Background, analysis and decisions: [docs/web/](docs/web/README.md).
 Web-specific behavior lives in platform files next to the native file (`AudioPlayer.web.tsx` next to
 `AudioPlayer.tsx`), resolved by Webpack's `.web.*` extensions.
 
-- A `.web.*` file exports exactly the same names and types as its native sibling.
+- A `.web.*` file exports exactly the same names and types as its native sibling. Where possible, type web stubs with
+  the native signature (`export const unlink: typeof NativeFileSystem.unlink = ...`, using `import type`).
 - Native libraries used by shared modules are wrapped in a small adapter we own (e.g. `src/services/fileSystem.ts`)
   that gets a `.web.ts` sibling. No webpack aliases for native packages.
 - No `Platform.OS === 'web'` branches in shared code unless an ADR says otherwise.

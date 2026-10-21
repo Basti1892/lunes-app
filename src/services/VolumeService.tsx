@@ -1,8 +1,8 @@
 import React, { createContext, ReactElement, useEffect, useMemo, useState } from 'react'
 import { Platform } from 'react-native'
-import DeviceInfo from 'react-native-device-info'
 import { useSilentSwitch, VolumeManager } from 'react-native-volume-manager'
 
+import { isEmulatorSync } from './deviceInfo'
 import { reportError } from './sentry'
 
 const useVolume = (): number => {
@@ -38,7 +38,7 @@ export type VolumeServiceProviderProps = {
   children: ReactElement
 }
 
-const isIphoneSimulator = (): boolean => DeviceInfo.isEmulatorSync() && Platform.OS === 'ios'
+const isIphoneSimulator = (): boolean => isEmulatorSync() && Platform.OS === 'ios'
 
 const VolumeServiceProvider = ({ children }: VolumeServiceProviderProps): ReactElement | null => {
   const silentModeResult = useSilentSwitch()

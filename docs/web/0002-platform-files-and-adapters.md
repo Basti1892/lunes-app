@@ -15,7 +15,9 @@ packages to stubs, or small adapter modules in `src` with a `.web.*` sibling.
 
 - Web-specific behavior lives in platform files next to the native file (`AudioPlayer.web.tsx` next to
   `AudioPlayer.tsx`). Webpack resolves them through the `.web.*` extensions; Metro ignores them.
-- A `.web.*` file exports exactly the same names and types as its native sibling.
+- A `.web.*` file exports exactly the same names and types as its native sibling. Where possible, web stubs are typed
+  with the native signature (`export const unlink: typeof NativeFileSystem.unlink = ...`). The `import type` is
+  removed at build time, so the native package is not bundled, and `tsc` checks that both versions stay compatible.
 - Native libraries used by shared modules are wrapped in a small adapter we own, for example
   `src/services/fileSystem.ts` and `src/services/deviceInfo.ts`, each with a `.web.ts` sibling. No webpack aliases for
   native packages.
