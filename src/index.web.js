@@ -1,8 +1,8 @@
 import { AppRegistry } from 'react-native'
 
 import '../web/fonts'
+import App from './App'
 import { name as appName } from './app.json'
-import WebPreviewScreen from './routes/WebPreviewScreen'
 
-AppRegistry.registerComponent(appName, () => WebPreviewScreen)
+AppRegistry.registerComponent(appName, () => App)
 AppRegistry.runApplication(appName, { rootTag: document.getElementById('root') })

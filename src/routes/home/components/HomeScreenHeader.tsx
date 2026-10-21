@@ -3,6 +3,7 @@ import React, { ReactElement } from 'react'
 import styled from 'styled-components/native'
 
 import { LunesIcon, MenuIcon } from '../../../../assets/images'
+import { FEATURES } from '../../../constants/features'
 import { RoutesParams } from '../../../navigation/NavigationTypes'
 import { getLabels } from '../../../services/helpers'
 
@@ -26,6 +27,15 @@ const MenuIconWhite = styled(MenuIcon)`
   color: ${props => props.theme.colors.backgroundAccent};
 `
 
+// Height of assets/images/menu.svg
+const MENU_ICON_HEIGHT = 29
+
+// Keeps the header height if the menu is not available (web)
+const MenuIconPlaceholder = styled.View`
+  height: ${MENU_ICON_HEIGHT}px;
+  margin: ${props => props.theme.spacings.sm} 0;
+`
+
 type HomeScreenHeaderProps = {
   navigation: StackNavigationProp<RoutesParams, keyof RoutesParams>
 }
@@ -35,9 +45,13 @@ const HomeScreenHeader = ({ navigation }: HomeScreenHeaderProps): ReactElement =
     <SmileIconStyle>
       <LunesIcon width={96} height={96} />
     </SmileIconStyle>
-    <MenuIconContainer onPress={() => navigation.navigate('OverlayMenu')}>
-      <MenuIconWhite testID='menu-icon-white' accessibilityLabel={getLabels().general.header.menu} />
-    </MenuIconContainer>
+    {FEATURES.menu ? (
+      <MenuIconContainer onPress={() => navigation.navigate('OverlayMenu')}>
+        <MenuIconWhite testID='menu-icon-white' accessibilityLabel={getLabels().general.header.menu} />
+      </MenuIconContainer>
+    ) : (
+      <MenuIconPlaceholder />
+    )}
   </Wrapper>
 )
 

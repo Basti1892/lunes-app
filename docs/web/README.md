@@ -81,8 +81,8 @@ After every step:
 1. Switch `src/index.web.js` to `App`.
 2. Add `Navigator.web.tsx`, with the root screens JobSelection, BottomTabNavigator, VocabularyList, VocabularyDetailExercise, WordChoiceExercise and ExerciseFinished.
 3. Add `BottomTabNavigator.web.tsx` (HomeTab only, tab bar hidden) and `HomeStackNavigator.web.tsx` (Home, UnitSelection, StandardExercises).
-4. Hide entry points to removed routes (menu, training card, manage selection) with small `.web` components where needed.
-5. Temporary stubs: `TtsService.web.tsx` and `VolumeService.web.tsx` as pass-through providers, so the bundle builds.
+4. Switch off entry points to removed routes with feature flags (`src/constants/features.ts` + `.web.ts`, see ADR 0003): menu button and training card. `ManageSelection` stays available on web.
+5. Web providers: `VolumeServiceProvider` (final: volume 1, never muted) and `TtsServiceProvider` (stub until step 5). Placeholders `AudioPlayer.web.tsx` (disabled button) and `ImageCarousel.web.tsx` (first image), because `react-native-sound-player` and `react-native-pager-view` cannot be bundled; replaced in steps 5 and 6.
 6. Verify: first start → JobSelection → Home → UnitSelection → StandardExercises, with no build errors from camera, permissions or speech modules.
 
 **Step 5: Audio.**
@@ -127,3 +127,21 @@ After every step:
 1. The user runs `yarn add @sentry/react`.
 2. `sentry.web.ts` gets the same consent gating as native.
 3. Document the build and deploy steps in `docs/web/README.md`.
+
+## Known issues
+
+Found during the steps above and not fixed yet.
+
+- **List items need a press of at least one frame.** `ListItem` stores the press-in position with `useState` and
+  compares it in `onPressOut`. react-native-web handles presses with its own DOM listeners, so if press and release
+  happen before React re-renders, `onPressOut` still sees no press-in position and ignores the press. Normal clicks
+  work; automated clicks and possibly very short touchpad taps do not. A `useRef` instead of `useState` would fix
+  this on all platforms. Found in step 4.
+- **List item content is centered on web** (e.g. job selection, unit selection) instead of left-aligned, and the
+  check icon sits next to the title instead of at the right edge. Found in step 4.
+- **React warning about `collapsable`** in development: `@react-navigation/stack` passes `collapsable={false}`, which
+  ends up as a DOM attribute. No visible effect.
+- **Build warnings for optional modules**: `react-native-gesture-handler` looks for `react-native-reanimated`,
+  `react-native-paper` for vector icon packages. Both are optional and not installed for the native apps either.
+- **URLs contain `[object Object]`** (e.g. `/UnitSelection?job=[object Object]`), because screens receive objects as
+  params. A reload on such a URL breaks. Solved by URL linking in step 7.

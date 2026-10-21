@@ -10,7 +10,7 @@ const webpack = require('webpack')
 const rootDir = path.resolve(__dirname, '..')
 
 // Packages in node_modules that ship untranspiled code (JSX, Flow or TypeScript) and have to go through babel.
-const untranspiledModules = []
+const untranspiledModules = ['react-native-progress']
 
 const includedPaths = [
   path.resolve(rootDir, 'index.js'),

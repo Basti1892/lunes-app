@@ -7,6 +7,7 @@ import Button from '../../../components/Button'
 import { Content } from '../../../components/text/Content'
 import { Heading } from '../../../components/text/Heading'
 import { BUTTONS_THEME } from '../../../constants/data'
+import { FEATURES } from '../../../constants/features'
 import { Color } from '../../../constants/theme/colors'
 import useLoadProgress from '../../../hooks/useLoadProgress'
 import Job from '../../../models/Job'
@@ -209,7 +210,7 @@ const ModeSelection = ({
         color={theme.colors.backgroundBlue}
         onPress={navigateToJob}
       />
-      <TrainingCard onPress={navigateToTrainingExerciseSelection} />
+      {FEATURES.training && <TrainingCard onPress={navigateToTrainingExerciseSelection} />}
     </Container>
   )
 }
