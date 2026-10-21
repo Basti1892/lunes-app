@@ -52,8 +52,8 @@ After every step:
      - `DefinePlugin` for `__DEV__` and `process.env.NODE_ENV`
      - `devServer` with `historyApiFallback`
    - `web/index.html`: a `#root` div.
-   - `index.web.js`: mirrors `index.js`.
-   - `src/index.web.js`: `registerComponent` plus `runApplication`. For this step it renders a temporary `WebPreviewScreen` that shows existing components (`Title`, `Button`) inside the styled-components `ThemeProvider`.
+   - Entry: the existing `index.js`. Its `./src/index` import resolves to `src/index.web.js` on web, so no root `index.web.js` is needed.
+   - `src/index.web.js`: `registerComponent` plus `runApplication`. For this step it renders a temporary `WebPreviewScreen` that shows existing components (`Title` and the text components; `Button` imports SVGs and follows in step 2) inside the styled-components `ThemeProvider`.
 3. Scripts: `"web": "webpack serve --config web/webpack.config.js"` and `"web:build": "webpack --config web/webpack.config.js --mode production"`. Output goes to `build/web` (already git- and prettier-ignored via `.gitignore`).
 4. Verify: `yarn web` opens http://localhost:8080 and shows the components without console errors, and the four checks pass.
 

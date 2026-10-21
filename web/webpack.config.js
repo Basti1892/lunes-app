@@ -1,0 +1,71 @@
+const HtmlWebpackPlugin = require('html-webpack-plugin')
+const path = require('path')
+const webpack = require('webpack')
+
+/**
+ * Webpack configuration for the web version (see docs/web/0001-webpack-with-react-native-web.md).
+ * babel.config.js is shared with Metro, the react-native-web plugin is only added here.
+ */
+
+const rootDir = path.resolve(__dirname, '..')
+
+// Packages in node_modules that ship untranspiled code (JSX, Flow or TypeScript) and have to go through babel.
+const untranspiledModules = []
+
+const includedPaths = [
+  path.resolve(rootDir, 'index.js'),
+  path.resolve(rootDir, 'src'),
+  ...untranspiledModules.map(name => path.resolve(rootDir, 'node_modules', name)),
+]
+
+module.exports = (_env, argv) => {
+  const isDevelopment = argv.mode !== 'production'
+
+  return {
+    mode: isDevelopment ? 'development' : 'production',
+    entry: path.resolve(rootDir, 'index.js'),
+    output: {
+      path: path.resolve(rootDir, 'build/web'),
+      filename: isDevelopment ? '[name].js' : '[name].[contenthash].js',
+      publicPath: '/',
+      clean: true,
+    },
+    devtool: isDevelopment ? 'eval-cheap-module-source-map' : 'source-map',
+    resolve: {
+      extensions: ['.web.tsx', '.web.ts', '.web.jsx', '.web.js', '.tsx', '.ts', '.jsx', '.js', '.json'],
+      mainFields: ['browser', 'module', 'main'],
+      alias: {
+        'react-native$': 'react-native-web',
+      },
+    },
+    module: {
+      rules: [
+        {
+          test: /\.m?js$/,
+          resolve: { fullySpecified: false },
+        },
+        {
+          test: /\.(js|jsx|ts|tsx)$/,
+          include: includedPaths,
+          use: {
+            loader: 'babel-loader',
+            options: {
+              configFile: path.resolve(rootDir, 'babel.config.js'),
+              plugins: ['react-native-web'],
+              cacheDirectory: true,
+            },
+          },
+        },
+      ],
+    },
+    plugins: [
+      new HtmlWebpackPlugin({ template: path.resolve(__dirname, 'index.html') }),
+      new webpack.DefinePlugin({ __DEV__: JSON.stringify(isDevelopment) }),
+    ],
+    devServer: {
+      port: 8080,
+      historyApiFallback: true,
+      client: { overlay: { errors: true, warnings: false } },
+    },
+  }
+}
