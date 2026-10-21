@@ -81,6 +81,7 @@
     "@react-native/babel-preset": "0.84.1",
     "@react-native/metro-config": "0.84.1",
     "@react-native/typescript-config": "0.84.1",
+    "@svgr/webpack": "^8.1.0",
     "@testing-library/jest-native": "^5.4.3",
     "@testing-library/react-native": "^13.3.3",
     "@trivago/prettier-plugin-sort-imports": "^4.3.0",

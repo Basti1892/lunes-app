@@ -60,7 +60,7 @@ After every step:
 **Step 2: SVG and fonts.**
 
 1. The user runs `yarn add -D @svgr/webpack`.
-2. Add an SVG rule (DOM target, `currentColor` kept). Add `@font-face` rules for SourceSansPro through an asset module.
+2. Add an SVG rule (SVGR `native` target, rendered by `react-native-svg` on web; `currentColor` kept, see ADR 0005). Register the SourceSansPro fonts with `@font-face` rules in `web/fonts.js` (asset modules for `.ttf` and `.png`).
 3. Verify: the preview shows an icon in two different `color`s, and text renders in SourceSansPro.
 
 **Step 3: Shared-module adapters (decision A).**

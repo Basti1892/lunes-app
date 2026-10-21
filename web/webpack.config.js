@@ -56,6 +56,15 @@ module.exports = (_env, argv) => {
             },
           },
         },
+        {
+          // Same output as react-native-svg-transformer on native: react-native-svg components, recolored via `color`
+          test: /\.svg$/,
+          use: { loader: '@svgr/webpack', options: { native: true } },
+        },
+        {
+          test: /\.(png|ttf)$/,
+          type: 'asset/resource',
+        },
       ],
     },
     plugins: [
