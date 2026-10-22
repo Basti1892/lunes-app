@@ -53,6 +53,8 @@ Everything else may be hidden on web.
 - Native: `yarn start`, `yarn android`, `yarn ios` (must keep working)
 - `yarn web` and open http://127.0.0.1:8080/iframe-test/index.html: the app in a cross-site iframe on a mock LMS page
 - Base path (PowerShell): `$env:LUNES_BASE_PATH='/lunes'; yarn web:build`. Git Bash turns `/lunes` into a Windows path.
+- Sentry: `$env:LUNES_SENTRY_DSN='<dsn>'; yarn web:build`. Without it the web version sends no errors (ADR 0011).
+- Build and deploy: see [docs/web/README.md](docs/web/README.md#build-and-deploy).
 
 ## Checks every step must pass
 

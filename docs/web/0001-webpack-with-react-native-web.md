@@ -23,6 +23,10 @@ poorly.
 - `__DEV__` and `process.env.NODE_ENV` are set with `DefinePlugin`.
 - `node_modules` packages that ship untranspiled code (e.g. `react-native-progress`, `@react-navigation/*`) are
   passed through babel-loader.
+- The babel-loader options set `disableImportExportTransform` for `@react-native/babel-preset` (step 9). Webpack then
+  gets ES modules and can remove unused code. Without it the bundle grew from 1.7 MiB to 3.2 MiB when Sentry was
+  added; with it, it is 1.55 MiB including Sentry. JSON files are imported with a default import
+  (`import app from './app.json'`), because webpack does not support named imports from JSON in ES modules.
 
 ## Consequences
 

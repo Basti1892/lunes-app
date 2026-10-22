@@ -2,7 +2,7 @@ import { AppRegistry } from 'react-native'
 
 import '../web/fonts'
 import App from './App'
-import { name as appName } from './app.json'
+import app from './app.json'
 
-AppRegistry.registerComponent(appName, () => App)
-AppRegistry.runApplication(appName, { rootTag: document.getElementById('root') })
+AppRegistry.registerComponent(app.name, () => App)
+AppRegistry.runApplication(app.name, { rootTag: document.getElementById('root') })

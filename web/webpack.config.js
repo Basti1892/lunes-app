@@ -64,6 +64,9 @@ module.exports = (_env, argv) => {
             loader: 'babel-loader',
             options: {
               configFile: path.resolve(rootDir, 'babel.config.js'),
+              // Keep ES modules for webpack, so that unused code of libraries (e.g. Sentry) can be removed.
+              // Babel merges this with the preset of the same name in babel.config.js.
+              presets: [['module:@react-native/babel-preset', { disableImportExportTransform: true }]],
               plugins: ['react-native-web'],
               cacheDirectory: true,
             },
@@ -85,6 +88,8 @@ module.exports = (_env, argv) => {
       new webpack.DefinePlugin({
         __DEV__: JSON.stringify(isDevelopment),
         'process.env.LUNES_BASE_PATH': JSON.stringify(basePath),
+        // Sentry is only active in production builds with a DSN (docs/web/0011-error-reporting-web.md)
+        'process.env.LUNES_SENTRY_DSN': JSON.stringify(process.env.LUNES_SENTRY_DSN ?? ''),
       }),
     ],
     devServer: {

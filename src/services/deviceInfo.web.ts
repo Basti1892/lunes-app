@@ -1,6 +1,6 @@
-import { versionName } from '../../version.json'
+import version from '../../version.json'
 
-export const getVersion = (): string => versionName
+export const getVersion = (): string => version.versionName
 
 export const isEmulatorSync = (): boolean => false
 

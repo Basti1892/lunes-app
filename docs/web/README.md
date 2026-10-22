@@ -25,7 +25,7 @@ Add a new ADR instead of rewriting an accepted one.
 | [0008](0008-url-linking.md)                     | URL linking                     | Accepted |
 | [0009](0009-persistence-on-web.md)              | Persistence on web              | Proposed |
 | [0010](0010-typescript-dom-lib.md)              | TypeScript `dom` lib            | Accepted |
-| [0011](0011-error-reporting-web.md)             | Error reporting on web          | Proposed |
+| [0011](0011-error-reporting-web.md)             | Error reporting on web          | Accepted |
 | [0012](0012-iframe-embedding.md)                | Iframe embedding                | Accepted |
 
 ## Implementation plan (small, testable steps)
@@ -117,9 +117,39 @@ After every step:
 
 **Step 9: Sentry web and production build.**
 
-1. The user runs `yarn add @sentry/react`.
-2. `sentry.web.ts` gets the same consent gating as native.
-3. Document the build and deploy steps in `docs/web/README.md`.
+1. `sentry.web.ts` with `@sentry/react`: only in production builds with `LUNES_SENTRY_DSN`, consent checked for every event in `beforeSend`, no session tracking (ADR 0011).
+2. Babel keeps ES modules for webpack, so unused code is removed (ADR 0001): 1.55 MiB including Sentry instead of 3.2 MiB.
+3. Build and deploy steps below. Verified with the production build behind a local server with SPA fallback and `/api` proxy: full path, audio, reload on a unit URL, Sentry requests only with consent.
+
+## Build and deploy
+
+1. Build (PowerShell; both variables are optional):
+
+   ```powershell
+   $env:LUNES_BASE_PATH='/lunes'; $env:LUNES_SENTRY_DSN='https://<key>@<sentry host>/<project>'; yarn web:build
+   ```
+
+2. Deploy the content of `build/web` to a static web server, below the base path if one is set.
+3. Configure the server (ADR 0012): every path below the base path that is not a file serves `index.html`;
+   `<base path>/api/` is proxied to the CMS (`https://lunes.tuerantuer.org/api/`);
+   `Content-Security-Policy: frame-ancestors <LMS origins>` allows embedding in the LMS.
+4. Embed in the LMS: `<iframe src="https://<host><base path>/jobs/<jobId>/units/<unitId>" allow="autoplay; web-share">`.
+
+Example for nginx with the base path `/lunes` (not tested; `alias` together with `try_files` needs care in nginx):
+
+```nginx
+location /lunes/api/ {
+  proxy_pass https://lunes.tuerantuer.org/api/;
+  proxy_set_header Host lunes.tuerantuer.org;
+  proxy_ssl_server_name on;
+}
+
+location /lunes/ {
+  alias /var/www/lunes-web/;
+  try_files $uri /lunes/index.html;
+  add_header Content-Security-Policy "frame-ancestors https://lms.example.org";
+}
+```
 
 ## Known issues
 
