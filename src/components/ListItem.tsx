@@ -119,6 +119,8 @@ type ListItemProps = {
   hideRightChildren?: boolean
   arrowDisabled?: boolean
   disabled?: boolean
+  // Announces the item as button. Only for items without nested buttons: on web the item then becomes a <button>.
+  isButton?: boolean
 }
 
 const ListItem = ({
@@ -134,6 +136,7 @@ const ListItem = ({
   hideRightChildren = false,
   arrowDisabled = false,
   disabled = false,
+  isButton = false,
 }: ListItemProps): ReactElement => {
   // A ref instead of state, so that a press out directly after the press in (e.g. a fast click on web) sees the value
   const pressIn = useRef<{ pageY: number | undefined } | null>(null)
@@ -207,6 +210,7 @@ const ListItem = ({
       pressed={pressed}
       delayLongPress={200}
       testID='list-item'
+      accessibilityRole={isButton ? 'button' : undefined}
     >
       <ContentContainer pressed={pressed} disabled={disabled}>
         {iconToRender}

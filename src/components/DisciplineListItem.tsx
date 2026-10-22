@@ -90,6 +90,7 @@ export const UnitListItem = ({
       badgeLabel={badgeLabel}
       rightChildren={rightChildren}
       disabled={disabled}
+      isButton
     />
   )
 }
@@ -170,6 +171,7 @@ export const JobListItem = ({
       }
       rightChildren={rightChildren}
       disabled={disabled}
+      isButton
     />
   )
 }

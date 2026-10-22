@@ -130,6 +130,7 @@ consent is given (ADR 0011). The changes in shared code (header back button, pro
 layout, hardware back button adapter) were checked by hand in the native app. Still open: Safari, text-to-speech with a
 word without recording (unit tests only).
 **After step 9: keyboard and fast clicks in lists.** List items could not be activated with Enter, and fast clicks were ignored. Both came from `ListItem`, which handles presses in `onPressOut` and compares the pointer position to detect scrolling: keyboard presses have no position (and react-native-web passes the DOM event without `nativeEvent` for the key up), and for releases within its 50 ms press delay react-native-web only calls `onPressIn` and `onPressOut` if the Pressable has an `onPress`. `ListItem` now treats presses without position as taps, keeps the press in position in a ref, and gets an empty `onPress` on web (`src/components/listItemPress.web.ts`).
+**After step 9: button role.** Job and unit list items are announced as buttons (`isButton` of `ListItem`, set in `DisciplineListItem`); on web they become `<button>` elements, so Space works as well. The word list is left out, because its entries contain buttons.
 
 ## Build and deploy
 
@@ -165,9 +166,10 @@ location /lunes/ {
 
 Found during the steps above and not fixed yet.
 
-- **List items have no button role.** Screen readers do not announce them as buttons, and Space does not activate them
-  on web (Enter does). On web the role would turn them into `<button>` elements, which is invalid for the word list:
-  its entries contain the audio and favorite buttons. Found after step 9.
+- **Word list entries have no button role.** Screen readers do not announce them as buttons, and Space does not
+  activate them on web (Enter does). On web the role turns an item into a `<button>`, which is invalid here: the
+  entries contain the audio and favorite buttons. Job and unit list items have the role (`isButton` of `ListItem`).
+  Found after step 9.
 - **React warning about `collapsable`** in development: `@react-navigation/stack` passes `collapsable={false}`, which
   ends up as a DOM attribute. No visible effect.
 - **Build warnings for optional modules**: `react-native-gesture-handler` looks for `react-native-reanimated`,

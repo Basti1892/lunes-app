@@ -113,6 +113,14 @@ describe('ListItem', () => {
     expect(onPress).toHaveBeenCalledTimes(1)
   })
 
+  it('should only be announced as button if requested', () => {
+    const { queryByRole, rerender } = renderListItem()
+    expect(queryByRole('button')).toBeNull()
+
+    rerender(<ListItem onPress={onPress} title={title} isButton />)
+    expect(queryByRole('button')).not.toBeNull()
+  })
+
   it('should not call on press callback without press in', () => {
     const { getByTestId } = renderListItem()
     const arrowIcon = getByTestId('arrow')

@@ -84,6 +84,12 @@ describe('UnitSelectionScreen', () => {
     await waitFor(() => expect(getByText(mockUnits[0]!.title)).toBeDefined())
   })
 
+  it('should announce the units as buttons', async () => {
+    const { getAllByRole } = renderScreen()
+
+    await waitFor(() => expect(getAllByRole('button')).toHaveLength(mockUnits.length))
+  })
+
   it('should navigate to exercises when list item pressed', async () => {
     const { getByText } = renderScreen()
 
