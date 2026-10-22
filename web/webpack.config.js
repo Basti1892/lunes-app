@@ -45,6 +45,11 @@ module.exports = (_env, argv) => {
           resolve: { fullySpecified: false },
         },
         {
+          // easy-speech declares "type": "module", but its require entry is CommonJS (module.exports)
+          test: /easy-speech[\\/]dist[\\/]EasySpeech\.cjs\.js$/,
+          type: 'javascript/auto',
+        },
+        {
           test: /\.(js|jsx|ts|tsx)$/,
           include: includedPaths,
           use: {

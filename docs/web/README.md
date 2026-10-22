@@ -24,7 +24,7 @@ Add a new ADR instead of rewriting an accepted one.
 | [0007](0007-backend-access-and-cors.md)         | Backend access and CORS         | Open     |
 | [0008](0008-url-linking.md)                     | URL linking                     | Proposed |
 | [0009](0009-persistence-on-web.md)              | Persistence on web              | Proposed |
-| [0010](0010-typescript-dom-lib.md)              | TypeScript `dom` lib            | Proposed |
+| [0010](0010-typescript-dom-lib.md)              | TypeScript `dom` lib            | Accepted |
 | [0011](0011-error-reporting-web.md)             | Error reporting on web          | Proposed |
 | [0012](0012-iframe-embedding.md)                | Iframe embedding                | Proposed |
 
@@ -88,10 +88,10 @@ After every step:
 **Step 5: Audio.**
 
 1. The user runs `yarn add easy-speech`.
-2. `AudioPlayer.web.tsx`: `HTMLAudioElement` for URLs and easy-speech for TTS, with the same props, icons and disabled states.
+2. `AudioPlayer.web.tsx`: `HTMLAudioElement` for URLs and easy-speech for TTS. The button moved into the shared `AudioPlayerButton.tsx`, so icons and disabled states are the same on both platforms.
 3. `TtsService.web.tsx`: `EasySpeech.init` with a de-DE voice, exposing the same `TtsServiceContext`.
-4. `VolumeService.web.tsx`: volume 1, never silent.
-5. Verify: VocabularyList plays CMS audio, and plays TTS for a word without audio. WordChoice plays the solution audio.
+4. `VolumeService.web.tsx` (already done in step 4). Add the `dom` lib to `tsconfig.json` (ADR 0010); the easy-speech types need it. Fix for easy-speech in the webpack config (ADR 0004). `ExerciseHeader`: the Paper progress bar took the whole screen height on web, now wrapped in a 4px container.
+5. Verify: VocabularyList and the WordChoice solution play CMS audio. TTS is only used for words without a recording; none of the 121 checked units on the test CMS has such a word, so TTS is covered by unit tests only.
 
 **Step 6: Rest of the exercise path.**
 
@@ -145,3 +145,6 @@ Found during the steps above and not fixed yet.
   `react-native-paper` for vector icon packages. Both are optional and not installed for the native apps either.
 - **URLs contain `[object Object]`** (e.g. `/UnitSelection?job=[object Object]`), because screens receive objects as
   params. A reload on such a URL breaks. Solved by URL linking in step 7.
+- **No image in the word choice exercise.** The `ImageCarousel.web.tsx` placeholder gives the image no width, so the
+  image area stays empty. Replaced in step 6. Found in step 5.
+- **"Später versuchen" overlaps the last answer** in the word choice exercise. Found in step 5.

@@ -18,6 +18,11 @@ const ProgressBar = styled(RNProgressBar)<{ disabledColor: string }>`
   background-color: ${props => props.disabledColor};
 `
 
+// The ProgressBar of react-native-paper is 4px high, but on web its outer view takes 100% of the available height
+const ProgressBarContainer = styled.View`
+  height: 4px;
+`
+
 const HeaderRightContainer = styled.View`
   flex-direction: row;
   align-items: center;
@@ -129,11 +134,13 @@ const ExerciseHeader = ({
   return (
     <>
       {showProgress && (
-        <ProgressBar
-          animatedValue={numberOfWords > 0 ? currentWord / numberOfWords : 0}
-          color={theme.colors.progressIndicatorTraining}
-          disabledColor={theme.colors.disabled}
-        />
+        <ProgressBarContainer>
+          <ProgressBar
+            animatedValue={numberOfWords > 0 ? currentWord / numberOfWords : 0}
+            color={theme.colors.progressIndicatorTraining}
+            disabledColor={theme.colors.disabled}
+          />
+        </ProgressBarContainer>
       )}
 
       <Modal
