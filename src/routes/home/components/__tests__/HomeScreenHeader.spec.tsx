@@ -7,7 +7,7 @@ import createNavigationMock from '../../../../testing/createNavigationPropMock'
 import render from '../../../../testing/render'
 import HomeScreenHeader from '../HomeScreenHeader'
 
-const mockFeatures: Features = { menu: true, training: true }
+const mockFeatures: Features = { menu: true, training: true, repetition: true }
 
 jest.mock('../../../../constants/features', () => ({
   get FEATURES() {

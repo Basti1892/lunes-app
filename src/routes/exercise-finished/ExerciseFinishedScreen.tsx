@@ -14,6 +14,7 @@ import {
   EXERCISE_FOR_REPETITION,
   SCORE_THRESHOLD_POSITIVE_FEEDBACK,
 } from '../../constants/data'
+import { FEATURES } from '../../constants/features'
 import theme from '../../constants/theme'
 import { Color } from '../../constants/theme/colors'
 import { RoutesParams } from '../../navigation/NavigationTypes'
@@ -48,6 +49,7 @@ const ExerciseFinishedScreen = ({ navigation, route }: ExerciseFinishedScreenPro
   const wasSuccessful = score > SCORE_THRESHOLD_POSITIVE_FEEDBACK
   const isRepetition = route.params.contentType === 'repetition'
   const shouldShowRepetitionModal =
+    FEATURES.repetition &&
     exercise === EXERCISE_FOR_REPETITION &&
     !isRepetition &&
     results.filter(result => result.numberOfTries > 1).length >= 3

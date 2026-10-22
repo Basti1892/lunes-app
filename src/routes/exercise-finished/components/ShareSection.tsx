@@ -3,6 +3,7 @@ import styled from 'styled-components/native'
 
 import { VocabularyItemResult } from '../../../navigation/NavigationTypes'
 import { getLabels } from '../../../services/helpers'
+import { canShare } from '../../../services/share'
 import ShareButton from './ShareButton'
 
 const Container = styled.View`
@@ -31,11 +32,16 @@ type ShareSectionProps = {
   results: VocabularyItemResult[]
 }
 
-const ShareSection = ({ unitTitle, results }: ShareSectionProps): ReactElement => (
-  <Container>
-    <Description>{getLabels().results.share.description}</Description>
-    <ShareButton unitTitle={unitTitle} results={results} />
-  </Container>
-)
+const ShareSection = ({ unitTitle, results }: ShareSectionProps): ReactElement | null => {
+  if (!canShare()) {
+    return null
+  }
+  return (
+    <Container>
+      <Description>{getLabels().results.share.description}</Description>
+      <ShareButton unitTitle={unitTitle} results={results} />
+    </Container>
+  )
+}
 
 export default ShareSection

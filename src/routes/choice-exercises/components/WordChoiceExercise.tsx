@@ -76,11 +76,12 @@ const initializeState = (vocabularyItems: VocabularyItem[]): State => {
   }
 }
 
+// flex-grow instead of flex: 1, which sets flex-basis to 0 and collapses the container inside the ScrollView on web
 const ButtonContainer = styled.View`
   align-items: center;
   justify-content: center;
   margin-bottom: ${props => props.theme.spacings.sm};
-  flex: 1;
+  flex-grow: 1;
 `
 
 const SolutionRow = styled.View`

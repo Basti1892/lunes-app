@@ -3,6 +3,7 @@ import { fireEvent } from '@testing-library/react-native'
 import React from 'react'
 
 import { StandardExerciseKey, EXERCISES, StandardExerciseKeys } from '../../../constants/data'
+import { Features } from '../../../constants/features'
 import { StandardUnitId } from '../../../models/Unit'
 import { RoutesParams } from '../../../navigation/NavigationTypes'
 import { getLabels, wordsDescription } from '../../../services/helpers'
@@ -11,7 +12,19 @@ import createNavigationMock from '../../../testing/createNavigationPropMock'
 import render from '../../../testing/render'
 import ExerciseFinishedScreen from '../ExerciseFinishedScreen'
 
+const mockFeatures: Features = { menu: true, training: true, repetition: true }
+
+jest.mock('../../../constants/features', () => ({
+  get FEATURES() {
+    return mockFeatures
+  },
+}))
+
 describe('ExerciseFinishedScreen', () => {
+  afterEach(() => {
+    mockFeatures.repetition = true
+  })
+
   const unitId: StandardUnitId = { type: 'standard', id: 1 }
   const navigation = createNavigationMock<'ExerciseFinished'>()
   const getRoute = (
@@ -49,6 +62,13 @@ describe('ExerciseFinishedScreen', () => {
     const route = getRoute(StandardExerciseKeys.wordChoiceExercise, false, false, 3)
     const { queryByTestId } = render(<ExerciseFinishedScreen route={route} navigation={navigation} />)
     expect(queryByTestId('repetition-modal')).toBeTruthy()
+  })
+
+  it('should not render the repetition modal if repetition is not available', () => {
+    mockFeatures.repetition = false
+    const route = getRoute(StandardExerciseKeys.wordChoiceExercise, false, false, 3)
+    const { queryByTestId } = render(<ExerciseFinishedScreen route={route} navigation={navigation} />)
+    expect(queryByTestId('repetition-modal')).toBeFalsy()
   })
 
   it('should not render the repetition modal inside the repetition stack', () => {

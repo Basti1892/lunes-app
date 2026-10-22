@@ -1,11 +1,11 @@
 import React, { ReactElement } from 'react'
-import { Share } from 'react-native'
 
 import { ShareIcon } from '../../../../assets/images'
 import Button from '../../../components/Button'
 import { BUTTONS_THEME } from '../../../constants/data'
 import { VocabularyItemResult } from '../../../navigation/NavigationTypes'
 import { getLabels } from '../../../services/helpers'
+import { shareText } from '../../../services/share'
 
 type ShareButtonProps = {
   unitTitle: string
@@ -20,7 +20,7 @@ const ShareButton = ({ unitTitle, results }: ShareButtonProps): ReactElement => 
       getLabels().results.share.message2
     } ${xOfAllWords} ${getLabels().results.share.message3}`
 
-    await Share.share({ message })
+    await shareText(message)
   }
 
   return (

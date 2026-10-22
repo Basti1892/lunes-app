@@ -24,6 +24,7 @@ the result.
   `FEATURES.menu && ...`, so native always takes the same branch as before.
   - `menu`: the menu button in `HomeScreenHeader` (a placeholder keeps the header height).
   - `training`: the training card in `ModeSelection`.
+  - `repetition`: the hint modal on the result screen that links to the repetition tab.
 
 ## Consequences
 

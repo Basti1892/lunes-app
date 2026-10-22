@@ -95,10 +95,10 @@ After every step:
 
 **Step 6: Rest of the exercise path.**
 
-1. `ImageCarousel.web.tsx`: a horizontal `ScrollView` with paging, or arrow buttons, instead of pager-view.
-2. `ShareButton.web.tsx`.
-3. Check the `ExerciseHeader` cancel/confirm modal and the AnalyticsConsentModal.
-4. Verify: the full path through `ExerciseFinished`, including "repeat" and "finished".
+1. `ImageCarousel.web.tsx`: a horizontal `ScrollView` with paging and the native dot indicator (swipe or touchpad). Images use `source={{ uri }}`, because react-native-web ignores the `src` prop of `Image`.
+2. Sharing via an adapter (`src/services/share.ts` + `.web.ts`, Web Share API); the share section is hidden where the API is missing. Repetition modal on the result screen switched off with `FEATURES.repetition`. `WordChoiceExercise`: `flex-grow: 1` instead of `flex: 1` for the button container, so "Später versuchen" no longer overlaps the answers on web.
+3. Checked: the cancel modal of `ExerciseHeader` and the AnalyticsConsentModal work.
+4. Verified: full path through `ExerciseFinished`: all correct ("Fertig") and all wrong ("Übung wiederholen", no repetition modal).
 
 **Step 7: URL linking.**
 
@@ -145,6 +145,7 @@ Found during the steps above and not fixed yet.
   `react-native-paper` for vector icon packages. Both are optional and not installed for the native apps either.
 - **URLs contain `[object Object]`** (e.g. `/UnitSelection?job=[object Object]`), because screens receive objects as
   params. A reload on such a URL breaks. Solved by URL linking in step 7.
-- **No image in the word choice exercise.** The `ImageCarousel.web.tsx` placeholder gives the image no width, so the
-  image area stays empty. Replaced in step 6. Found in step 5.
-- **"Später versuchen" overlaps the last answer** in the word choice exercise. Found in step 5.
+- **Images can only be changed by swiping or touchpad scrolling.** With a mouse there are no arrow buttons in the
+  web carousel. All checked words of the test CMS have exactly one image, so this is not visible yet. Found in step 6.
+- **Sharing is hidden where the Web Share API is missing**, e.g. in Firefox on desktop and in iframes without
+  `allow="web-share"`. Found in step 6.

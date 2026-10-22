@@ -5,9 +5,12 @@ export type Features = {
   menu: boolean
   // Image, sentence and speech training
   training: boolean
+  // Repetition tab with spaced repetition of words answered wrongly
+  repetition: boolean
 }
 
 export const FEATURES: Features = {
   menu: true,
   training: true,
+  repetition: true,
 }
