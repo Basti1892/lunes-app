@@ -125,6 +125,11 @@ After every step:
 
 **After step 9: icons and search field.** The back arrow was cut off, because SVGR's default SVGO config removed the `viewBox` (now the same config as `react-native-svg-transformer`, ADR 0005). The search field showed the browser focus ring only around the inner input, narrower than the field; on web the ring is now drawn around the whole field (`src/components/textInputFocus.web.ts`).
 
+**After step 9: consent and native check.** The analytics consent dialog is not shown on web; without an answer no
+consent is given (ADR 0011). The changes in shared code (header back button, progress bar, word choice layout, list
+layout, hardware back button adapter) were checked by hand in the native app. Still open: Safari, text-to-speech with a
+word without recording (unit tests only).
+
 ## Build and deploy
 
 1. Build (PowerShell; both variables are optional):
