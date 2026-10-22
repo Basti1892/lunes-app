@@ -19,8 +19,10 @@ import {
   StandardExerciseKeys,
   SCORE_THRESHOLD_POSITIVE_FEEDBACK,
 } from '../../constants/data'
+import useLoadUnit from '../../hooks/useLoadUnit'
 import useLoadWordsByUnit from '../../hooks/useLoadWordsByUnit'
 import useStorage from '../../hooks/useStorage'
+import { StandardUnit } from '../../models/Unit'
 import { RoutesParams } from '../../navigation/NavigationTypes'
 import { getLabels, getNumberOfUnlockedExercises, wordsDescription } from '../../services/helpers'
 
@@ -50,14 +52,13 @@ const UnitItem = styled(PressableOpacity)`
   gap: ${props => props.theme.spacings.sm};
 `
 
-type ExercisesScreenProps = {
-  route: RouteProp<RoutesParams, 'StandardExercises'>
+type StandardExercisesProps = {
+  unit: StandardUnit
   navigation: StackNavigationProp<RoutesParams, 'StandardExercises'>
 }
 
-const StandardExercisesScreen = ({ route, navigation }: ExercisesScreenProps): ReactElement => {
+const StandardExercises = ({ unit, navigation }: StandardExercisesProps): ReactElement => {
   const theme = useTheme()
-  const { unit } = route.params
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false)
   const [scores] = useStorage('progress')
   const nextExerciseNumber = getNumberOfUnlockedExercises(scores, unit.id)
@@ -166,5 +167,39 @@ const StandardExercisesScreen = ({ route, navigation }: ExercisesScreenProps): R
     </RouteWrapper>
   )
 }
+
+type StandardExercisesByIdProps = {
+  jobId: number
+  unitId: number
+  navigation: StackNavigationProp<RoutesParams, 'StandardExercises'>
+}
+
+// Opened by URL on web (docs/web/0008-url-linking.md): the unit has to be loaded first
+const StandardExercisesById = ({ jobId, unitId, navigation }: StandardExercisesByIdProps): ReactElement => {
+  const { data: unit, error, loading, refresh } = useLoadUnit(jobId, unitId)
+
+  if (unit !== null) {
+    return <StandardExercises unit={unit} navigation={navigation} />
+  }
+  return (
+    <RouteWrapper>
+      <ServerResponseHandler error={error} loading={loading} refresh={refresh}>
+        {null}
+      </ServerResponseHandler>
+    </RouteWrapper>
+  )
+}
+
+type ExercisesScreenProps = {
+  route: RouteProp<RoutesParams, 'StandardExercises'>
+  navigation: StackNavigationProp<RoutesParams, 'StandardExercises'>
+}
+
+const StandardExercisesScreen = ({ route, navigation }: ExercisesScreenProps): ReactElement =>
+  'unit' in route.params ? (
+    <StandardExercises unit={route.params.unit} navigation={navigation} />
+  ) : (
+    <StandardExercisesById jobId={route.params.jobId} unitId={route.params.unitId} navigation={navigation} />
+  )
 
 export default StandardExercisesScreen

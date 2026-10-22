@@ -5,6 +5,7 @@ import { mocked } from 'jest-mock'
 import React from 'react'
 
 import { EXERCISES, StandardExerciseKeys, SCORE_THRESHOLD_POSITIVE_FEEDBACK } from '../../../constants/data'
+import useLoadUnit from '../../../hooks/useLoadUnit'
 import useLoadWordsByUnit from '../../../hooks/useLoadWordsByUnit'
 import { RoutesParams } from '../../../navigation/NavigationTypes'
 import { StorageCache } from '../../../services/Storage'
@@ -18,6 +19,7 @@ import StandardExercisesScreen from '../StandardExercisesScreen'
 
 jest.mock('@react-navigation/native')
 jest.mock('../../../hooks/useLoadWordsByUnit')
+jest.mock('../../../hooks/useLoadUnit')
 
 describe('StandardExercisesScreen', () => {
   const vocabularyItems = new VocabularyItemBuilder(1).build()
@@ -38,7 +40,7 @@ describe('StandardExercisesScreen', () => {
     RNAsyncStorage.clear()
     storageCache = StorageCache.createDummy()
     storageCache.setItem('progress', {
-      [route.params.unit.id.id]: {
+      [mockUnits[0]!.id.id]: {
         word_list: SCORE_THRESHOLD_POSITIVE_FEEDBACK - 1,
         word_choice: SCORE_THRESHOLD_POSITIVE_FEEDBACK + 1,
       },
@@ -55,6 +57,25 @@ describe('StandardExercisesScreen', () => {
       expect(getAllByText(exercise.title)).toBeDefined()
       expect(getAllByText(exercise.description)).toBeDefined()
     })
+  })
+
+  it('should load the unit if only the ids are given', () => {
+    const unit = mockUnits[0]!
+    mocked(useLoadUnit).mockReturnValue(getReturnOf(unit))
+    const routeWithIds: RouteProp<RoutesParams, 'StandardExercises'> = {
+      key: 'key-0',
+      name: 'StandardExercises',
+      params: { jobId: 1, unitId: unit.id.id },
+    }
+
+    const { getByText } = renderWithStorageCache(
+      storageCache,
+      <StandardExercisesScreen route={routeWithIds} navigation={navigation} />,
+    )
+
+    expect(useLoadUnit).toHaveBeenCalledWith(1, unit.id.id)
+    expect(getByText(unit.title)).toBeDefined()
+    expect(getByText(EXERCISES[StandardExerciseKeys.vocabularyList].title)).toBeDefined()
   })
 
   it('should show modal that the lesson is not available yet on navigation if locked', async () => {

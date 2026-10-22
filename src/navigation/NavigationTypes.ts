@@ -22,10 +22,11 @@ type VocabularyDetailExerciseParams = {
   vocabularyItemIndex: number
 } & ExerciseParams
 
-export type StandardExercisesParams = {
-  unit: StandardUnit
-  jobTitle: string
-}
+// UnitSelection and StandardExercises can also be opened by URL on web, then only the ids are known
+// (docs/web/0008-url-linking.md). The apps always pass the objects.
+export type UnitSelectionParams = { job: Job } | { jobId: number }
+
+export type StandardExercisesParams = { unit: StandardUnit; jobTitle: string } | { jobId: number; unitId: number }
 export type SpecialExercisesParams = {
   vocabularyItems: VocabularyItem[]
   unit: UserVocabularyUnit
@@ -72,9 +73,7 @@ export type RoutesParams = {
     jobScope?: { type: 'contentArea'; token: string } | { type: 'lunesOnly' }
   }
   AddCustomDiscipline: undefined
-  UnitSelection: {
-    job: Job
-  }
+  UnitSelection: UnitSelectionParams
   VocabularyDetailExercise: VocabularyDetailExerciseParams
   StandardExercises: StandardExercisesParams
   VocabularyList: ExerciseParams

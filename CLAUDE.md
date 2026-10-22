@@ -41,8 +41,8 @@ Everything else may be hidden on web.
 
 ## URLs
 
-- `/` Home, `/select-job` JobSelection, `/jobs/:jobId` UnitSelection, `/jobs/:jobId/units/:unitId`
-  StandardExercises, `/activation/:code` Activation.
+- `/` Home (or JobSelection on first start), `/select-job` JobSelection, `/jobs/:jobId` UnitSelection,
+  `/jobs/:jobId/units/:unitId` StandardExercises, `/manage-jobs` ManageSelection. Exercises keep the URL of their unit.
 - The web linking config lives in `src/navigation/deepLinking.web.ts`; the native config stays unchanged.
 
 ## Commands (Windows, Yarn via corepack)

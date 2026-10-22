@@ -22,7 +22,7 @@ Add a new ADR instead of rewriting an accepted one.
 | [0005](0005-svg-icons-with-svgr.md)             | SVG icons with SVGR             | Accepted |
 | [0006](0006-web-dependency-placement.md)        | Placement of web dependencies   | Accepted |
 | [0007](0007-backend-access-and-cors.md)         | Backend access and CORS         | Open     |
-| [0008](0008-url-linking.md)                     | URL linking                     | Proposed |
+| [0008](0008-url-linking.md)                     | URL linking                     | Accepted |
 | [0009](0009-persistence-on-web.md)              | Persistence on web              | Proposed |
 | [0010](0010-typescript-dom-lib.md)              | TypeScript `dom` lib            | Accepted |
 | [0011](0011-error-reporting-web.md)             | Error reporting on web          | Proposed |
@@ -102,19 +102,10 @@ After every step:
 
 **Step 7: URL linking.**
 
-1. `src/navigation/deepLinking.ts` (+ `.web.ts`): move the existing config out of `App.tsx` unchanged. The web version maps:
-   - `''` → Home
-   - `jobs/:jobId` → UnitSelection
-   - `jobs/:jobId/units/:unitId` → StandardExercises
-   - `select-job` → JobSelection
-   - `activation/:code`
-2. Exercise and result screens get no path. Their state is transient, and a reload redirects back to the unit.
-3. `UnitSelection` and `StandardExercises` accept an optional id param and load the object when it is missing:
-   - UnitSelection via `useLoadJob`.
-   - StandardExercises via `useLoadUnits` plus a lookup by id.
-   - Token comes from `tokenForJob`.
-   - Native navigation keeps passing objects.
-4. Verify: open `/jobs/1` and `/jobs/1/units/5` directly and reload them; browser back/forward work. Add unit tests for the param fallback.
+1. `src/navigation/deepLinking.ts` (native, moved unchanged out of `App.tsx`) and `deepLinking.web.ts`: `/`, `/select-job`, `/jobs/:jobId`, `/jobs/:jobId/units/:unitId`, `/manage-jobs` (details in ADR 0008).
+2. `UnitSelection` and `StandardExercises` accept ids instead of objects and load job (`useLoadJob`) or unit (new `useLoadUnit`) first. The apps keep passing objects.
+3. URLs are built from a copy of the state: objects replaced by ids, exercise and result screens cut off, so the URL stays the one of the unit.
+4. Verified: clean URLs while navigating, reload on a unit URL, direct links on an empty storage, header back from a direct link to the units of the job, browser back and forward.
 
 **Step 8: Iframe readiness.**
 
@@ -143,9 +134,11 @@ Found during the steps above and not fixed yet.
   ends up as a DOM attribute. No visible effect.
 - **Build warnings for optional modules**: `react-native-gesture-handler` looks for `react-native-reanimated`,
   `react-native-paper` for vector icon packages. Both are optional and not installed for the native apps either.
-- **URLs contain `[object Object]`** (e.g. `/UnitSelection?job=[object Object]`), because screens receive objects as
-  params. A reload on such a URL breaks. Solved by URL linking in step 7.
 - **Images can only be changed by swiping or touchpad scrolling.** With a mouse there are no arrow buttons in the
   web carousel. All checked words of the test CMS have exactly one image, so this is not visible yet. Found in step 6.
 - **Sharing is hidden where the Web Share API is missing**, e.g. in Firefox on desktop and in iframes without
   `allow="web-share"`. Found in step 6.
+- **A link to a profession does not select it.** Opening `/jobs/:jobId` shows the units, but Home stays empty if the
+  app was only opened via such a link. Found in step 7.
+- **Browser back skips the cancel dialog of an exercise**, because the URL does not change while an exercise is
+  open. Found in step 7.

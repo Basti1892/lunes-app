@@ -5,7 +5,7 @@ import React from 'react'
 
 import { StandardJob } from '../../models/Job'
 import { RoutesParams } from '../../navigation/NavigationTypes'
-import { getUnitsOfJob } from '../../services/CmsApi'
+import { getJob, getUnitsOfJob } from '../../services/CmsApi'
 import { StorageCache } from '../../services/Storage'
 import createNavigationMock from '../../testing/createNavigationPropMock'
 import mockUnits from '../../testing/mockUnit'
@@ -57,6 +57,31 @@ describe('UnitSelectionScreen', () => {
       expect(getByText(mockUnits[1]!.title)).toBeDefined()
       expect(getByText(mockUnits[2]!.title)).toBeDefined()
     })
+  })
+
+  it('should load the job if only its id is given', async () => {
+    const job: StandardJob = {
+      id: { id: 42, type: 'standard' },
+      name: 'Loaded job',
+      icon: null,
+      numberOfUnits: 3,
+      migrated: false,
+    }
+    mocked(getJob).mockResolvedValue(job)
+    const route: RouteProp<RoutesParams, 'UnitSelection'> = {
+      key: 'key-1',
+      name: 'UnitSelection',
+      params: { jobId: 42 },
+    }
+
+    const { getByText } = renderWithStorageCache(
+      storageCache,
+      <UnitSelectionScreen route={route} navigation={navigation} />,
+    )
+
+    await waitFor(() => expect(getByText(job.name)).toBeDefined())
+    expect(getJob).toHaveBeenCalledWith({ id: job.id, token: undefined })
+    await waitFor(() => expect(getByText(mockUnits[0]!.title)).toBeDefined())
   })
 
   it('should navigate to exercises when list item pressed', async () => {
