@@ -121,6 +121,8 @@ After every step:
 2. Babel keeps ES modules for webpack, so unused code is removed (ADR 0001): 1.55 MiB including Sentry instead of 3.2 MiB.
 3. Build and deploy steps below. Verified with the production build behind a local server with SPA fallback and `/api` proxy: full path, audio, reload on a unit URL, Sentry requests only with consent.
 
+**After step 9: list layout.** List items (job selection, unit selection, word list) were centered on web. Their content row is a child of a column with `align-items: center`; CSS shrinks it to its content width, while React Native renders it full width because of a `flex: 1` child. `ListItem`: `align-self: stretch` on the content row.
+
 ## Build and deploy
 
 1. Build (PowerShell; both variables are optional):
@@ -160,8 +162,6 @@ Found during the steps above and not fixed yet.
   happen before React re-renders, `onPressOut` still sees no press-in position and ignores the press. Normal clicks
   work; automated clicks and possibly very short touchpad taps do not. A `useRef` instead of `useState` would fix
   this on all platforms. Found in step 4.
-- **List item content is centered on web** (e.g. job selection, unit selection) instead of left-aligned, and the
-  check icon sits next to the title instead of at the right edge. Found in step 4.
 - **React warning about `collapsable`** in development: `@react-navigation/stack` passes `collapsable={false}`, which
   ends up as a DOM attribute. No visible effect.
 - **Build warnings for optional modules**: `react-native-gesture-handler` looks for `react-native-reanimated`,

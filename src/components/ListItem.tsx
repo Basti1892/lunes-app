@@ -42,8 +42,11 @@ const Container = styled(GenericListItemContainer)<{
   }};
 `
 
+// align-self: stretch keeps the content full width on web. The container centers its children, which shrinks them to
+// their content width in CSS; React Native already renders this row full width because of the flex: 1 child.
 const ContentContainer = styled.View<{ pressed: boolean; disabled: boolean }>`
   display: flex;
+  align-self: stretch;
   flex-direction: row;
   padding: ${props =>
     `${props.theme.spacings.sm} ${props.theme.spacings.xs} ${props.theme.spacings.sm} ${props.theme.spacings.sm}`};
