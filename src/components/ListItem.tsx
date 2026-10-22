@@ -1,9 +1,10 @@
-import React, { ReactElement, useCallback, useState } from 'react'
+import React, { ReactElement, useCallback, useRef, useState } from 'react'
 import { GestureResponderEvent } from 'react-native'
 import styled, { useTheme } from 'styled-components/native'
 
 import { ChevronRight } from '../../assets/images'
 import { hyphenated } from '../services/hyphenation'
+import { onPressForShortPresses } from './listItemPress'
 import { ContentSecondary } from './text/Content'
 
 export const GenericListItemContainer = styled.Pressable`
@@ -100,6 +101,11 @@ const BadgeLabel = styled.Text<{ pressed: boolean }>`
 
 const PRESS_MAX_DRAG_Y = 5
 
+// Pointer position of a press, undefined for keyboard presses on web. For the release of a key, react-native-web passes
+// the DOM event itself, which has no nativeEvent.
+const pageYOf = (e: GestureResponderEvent): number | undefined =>
+  (e.nativeEvent as GestureResponderEvent['nativeEvent'] | undefined)?.pageY
+
 type ListItemProps = {
   title: string | ReactElement
   icon?: string | ReactElement
@@ -129,20 +135,29 @@ const ListItem = ({
   arrowDisabled = false,
   disabled = false,
 }: ListItemProps): ReactElement => {
-  const [pressInY, setPressInY] = useState<number | null>(null)
+  // A ref instead of state, so that a press out directly after the press in (e.g. a fast click on web) sees the value
+  const pressIn = useRef<{ pageY: number | undefined } | null>(null)
   const [pressed, setPressed] = useState<boolean>(false)
   const updatePressed = useCallback((pressed: boolean): void => onPress && setPressed(pressed), [onPress])
 
   const theme = useTheme()
 
   const onPressIn = (e: GestureResponderEvent) => {
-    setPressInY(e.nativeEvent.pageY)
+    pressIn.current = { pageY: pageYOf(e) }
   }
 
   const onPressOut = useCallback(
     (e: GestureResponderEvent) => {
-      if (pressInY && Math.abs(pressInY - e.nativeEvent.pageY) <= PRESS_MAX_DRAG_Y) {
-        // Only call onPress if user not scrolling
+      const pressInY = pressIn.current?.pageY
+      const pressOutY = pageYOf(e)
+      // Keyboard presses (Enter or space on web) have no pointer position
+      const isKeyboardPress = pressIn.current !== null && pressInY === undefined && pressOutY === undefined
+      // Only call onPress if user not scrolling
+      const isTap =
+        pressInY !== undefined && pressOutY !== undefined && Math.abs(pressInY - pressOutY) <= PRESS_MAX_DRAG_Y
+      pressIn.current = null
+
+      if (isKeyboardPress || isTap) {
         updatePressed(true)
         if (onPress) {
           onPress()
@@ -151,9 +166,8 @@ const ListItem = ({
       } else {
         updatePressed(false)
       }
-      setPressInY(null)
     },
-    [pressInY, updatePressed, onPress, theme.animations.durationMs],
+    [updatePressed, onPress, theme.animations.durationMs],
   )
 
   const titleText =
@@ -188,6 +202,7 @@ const ListItem = ({
       disabled={disabled}
       onPressIn={onPressIn}
       onPressOut={onPressOut}
+      onPress={onPressForShortPresses}
       onLongPress={() => updatePressed(true)}
       pressed={pressed}
       delayLongPress={200}

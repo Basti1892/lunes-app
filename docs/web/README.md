@@ -129,6 +129,7 @@ After every step:
 consent is given (ADR 0011). The changes in shared code (header back button, progress bar, word choice layout, list
 layout, hardware back button adapter) were checked by hand in the native app. Still open: Safari, text-to-speech with a
 word without recording (unit tests only).
+**After step 9: keyboard and fast clicks in lists.** List items could not be activated with Enter, and fast clicks were ignored. Both came from `ListItem`, which handles presses in `onPressOut` and compares the pointer position to detect scrolling: keyboard presses have no position (and react-native-web passes the DOM event without `nativeEvent` for the key up), and for releases within its 50 ms press delay react-native-web only calls `onPressIn` and `onPressOut` if the Pressable has an `onPress`. `ListItem` now treats presses without position as taps, keeps the press in position in a ref, and gets an empty `onPress` on web (`src/components/listItemPress.web.ts`).
 
 ## Build and deploy
 
@@ -164,11 +165,9 @@ location /lunes/ {
 
 Found during the steps above and not fixed yet.
 
-- **List items need a press of at least one frame.** `ListItem` stores the press-in position with `useState` and
-  compares it in `onPressOut`. react-native-web handles presses with its own DOM listeners, so if press and release
-  happen before React re-renders, `onPressOut` still sees no press-in position and ignores the press. Normal clicks
-  work; automated clicks and possibly very short touchpad taps do not. A `useRef` instead of `useState` would fix
-  this on all platforms. Found in step 4.
+- **List items have no button role.** Screen readers do not announce them as buttons, and Space does not activate them
+  on web (Enter does). On web the role would turn them into `<button>` elements, which is invalid for the word list:
+  its entries contain the audio and favorite buttons. Found after step 9.
 - **React warning about `collapsable`** in development: `@react-navigation/stack` passes `collapsable={false}`, which
   ends up as a DOM attribute. No visible effect.
 - **Build warnings for optional modules**: `react-native-gesture-handler` looks for `react-native-reanimated`,

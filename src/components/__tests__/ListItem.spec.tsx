@@ -92,6 +92,36 @@ describe('ListItem', () => {
     expect(arrowIcon.props.color).toBe(COLORS.primary)
   })
 
+  it('should handle keyboard presses without pointer position (web)', () => {
+    const { getByTestId } = renderListItem()
+    const arrowIcon = getByTestId('arrow')
+
+    // Like react-native-web: the key down is a React event, the key up the DOM event without nativeEvent
+    fireEvent(arrowIcon, 'pressIn', { nativeEvent: {} })
+    fireEvent(arrowIcon, 'pressOut', {})
+
+    expect(onPress).toHaveBeenCalledTimes(1)
+  })
+
+  it('should handle presses at the top of the screen', () => {
+    const { getByTestId } = renderListItem()
+    const arrowIcon = getByTestId('arrow')
+
+    fireEvent(arrowIcon, 'pressIn', { nativeEvent: { pageY: 0 } })
+    fireEvent(arrowIcon, 'pressOut', { nativeEvent: { pageY: 0 } })
+
+    expect(onPress).toHaveBeenCalledTimes(1)
+  })
+
+  it('should not call on press callback without press in', () => {
+    const { getByTestId } = renderListItem()
+    const arrowIcon = getByTestId('arrow')
+
+    fireEvent(arrowIcon, 'pressOut', { nativeEvent: {} })
+
+    expect(onPress).not.toHaveBeenCalled()
+  })
+
   describe('when the title is a long compound word', () => {
     const longTitle = 'Dampfschifffahrtsgesellschaftskapitänsmütze'
 
