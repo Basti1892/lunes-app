@@ -17,7 +17,9 @@ wrapped with `styled(...)` from `styled-components/native` (e.g. `MenuIconWhite`
 ## Decision
 
 - Use `@svgr/webpack` with the `native` target, which produces the same output as `react-native-svg-transformer`:
-  `react-native-svg` components.
+  `react-native-svg` components. The webpack rule uses the same SVGO config as the defaults of
+  `react-native-svg-transformer`. Above all it keeps the `viewBox`: SVGR's own defaults remove it, and icons rendered
+  at another size than in the file (e.g. the 31 px back arrow at 28 px) were then cut off instead of scaled.
 - On web these components render through `react-native-svg`'s web implementation, which creates its elements with
   react-native-web. Style arrays, `testID` (→ `data-testid`) and accessibility props work as on native.
 - The `color` prop is passed to the `<svg>` element as the CSS `color`, so `fill="currentColor"` keeps working.

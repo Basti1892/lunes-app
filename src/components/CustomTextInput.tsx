@@ -7,6 +7,7 @@ import { getLabels } from '../services/helpers'
 import PressableOpacity from './PressableOpacity'
 import { ContentError } from './text/Content'
 import { HintSecondary } from './text/Hint'
+import { fieldFocusCss, inputFocusCss } from './textInputFocus'
 
 const LINE_HEIGHT = 32
 const MIN_HEIGHT = 56
@@ -17,6 +18,7 @@ const StyledTextInput = styled.TextInput`
   font-family: ${props => props.theme.fonts.contentFontRegular};
   color: ${prop => prop.theme.colors.primary};
   flex: 1;
+  ${inputFocusCss()}
 `
 
 const ClearContainer = styled(PressableOpacity)`
@@ -24,13 +26,19 @@ const ClearContainer = styled(PressableOpacity)`
   height: ${props => props.theme.spacings.md};
 `
 
-const TextInputContainer = styled.View<{ lines: number; borderColor: string; showErrorValidation: boolean }>`
+const TextInputContainer = styled.View<{
+  lines: number
+  borderColor: string
+  showErrorValidation: boolean
+  isFocused: boolean
+}>`
   border: 1px solid ${props => props.borderColor};
   padding: 0 ${props => props.theme.spacings.sm};
   border-radius: 2px;
   height: ${props => (props.lines > 1 ? props.lines * LINE_HEIGHT : MIN_HEIGHT)}px;
   flex-direction: row;
   margin-bottom: ${props => (props.showErrorValidation ? 0 : props.theme.spacings.xs)};
+  ${props => fieldFocusCss(props.isFocused, props.theme.colors.primary)}
 `
 
 const IconContainer = styled.View<{ multiLine: boolean }>`
@@ -135,6 +143,7 @@ const CustomTextInput = ({
         lines={lines}
         borderColor={customBorderColor ?? getBorderColor()}
         showErrorValidation={showErrorValidation}
+        isFocused={isFocused}
       >
         <StyledTextInput
           {...textInputProps}

@@ -75,7 +75,29 @@ module.exports = (_env, argv) => {
         {
           // Same output as react-native-svg-transformer on native: react-native-svg components, recolored via `color`
           test: /\.svg$/,
-          use: { loader: '@svgr/webpack', options: { native: true } },
+          use: {
+            loader: '@svgr/webpack',
+            options: {
+              native: true,
+              // Same SVGO config as the defaults of react-native-svg-transformer. Above all the viewBox has to be kept,
+              // otherwise icons are not scaled to the width and height they are rendered with.
+              svgoConfig: {
+                plugins: [
+                  {
+                    name: 'preset-default',
+                    params: {
+                      overrides: {
+                        inlineStyles: { onlyMatchedOnce: false },
+                        removeViewBox: false,
+                        removeUnknownsAndDefaults: false,
+                        convertColors: false,
+                      },
+                    },
+                  },
+                ],
+              },
+            },
+          },
         },
         {
           test: /\.(png|ttf)$/,

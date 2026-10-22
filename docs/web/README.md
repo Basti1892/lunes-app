@@ -123,6 +123,8 @@ After every step:
 
 **After step 9: list layout.** List items (job selection, unit selection, word list) were centered on web. Their content row is a child of a column with `align-items: center`; CSS shrinks it to its content width, while React Native renders it full width because of a `flex: 1` child. `ListItem`: `align-self: stretch` on the content row.
 
+**After step 9: icons and search field.** The back arrow was cut off, because SVGR's default SVGO config removed the `viewBox` (now the same config as `react-native-svg-transformer`, ADR 0005). The search field showed the browser focus ring only around the inner input, narrower than the field; on web the ring is now drawn around the whole field (`src/components/textInputFocus.web.ts`).
+
 ## Build and deploy
 
 1. Build (PowerShell; both variables are optional):
