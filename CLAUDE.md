@@ -51,8 +51,8 @@ Everything else may be hidden on web.
 - `yarn web`: dev server on http://localhost:8080 (proxies `/api` to the lunes-test CMS)
 - `yarn web:build`: production bundle in `build/web`
 - Native: `yarn start`, `yarn android`, `yarn ios` (must keep working)
-
-The `web` scripts are added in step 1 of the plan in [docs/web/README.md](docs/web/README.md).
+- `yarn web` and open http://127.0.0.1:8080/iframe-test/index.html: the app in a cross-site iframe on a mock LMS page
+- Base path (PowerShell): `$env:LUNES_BASE_PATH='/lunes'; yarn web:build`. Git Bash turns `/lunes` into a Windows path.
 
 ## Checks every step must pass
 

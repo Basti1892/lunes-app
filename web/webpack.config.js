@@ -12,6 +12,14 @@ const rootDir = path.resolve(__dirname, '..')
 // Packages in node_modules that ship untranspiled code (JSX, Flow or TypeScript) and have to go through babel.
 const untranspiledModules = ['react-native-progress']
 
+// Path under which the web version is hosted, e.g. /lunes, empty for the root of a domain (docs/web/0012).
+// App, assets and the /api proxy all live below it.
+const basePath = (process.env.LUNES_BASE_PATH ?? '').replace(/\/+$/, '')
+if (basePath !== '' && !basePath.startsWith('/')) {
+  // Git Bash on Windows turns /lunes into a Windows path, use PowerShell or set MSYS_NO_PATHCONV=1
+  throw new Error(`LUNES_BASE_PATH must start with a slash, but is '${basePath}'`)
+}
+
 const includedPaths = [
   path.resolve(rootDir, 'index.js'),
   path.resolve(rootDir, 'src'),
@@ -27,7 +35,7 @@ module.exports = (_env, argv) => {
     output: {
       path: path.resolve(rootDir, 'build/web'),
       filename: isDevelopment ? '[name].js' : '[name].[contenthash].js',
-      publicPath: '/',
+      publicPath: `${basePath}/`,
       clean: true,
     },
     devtool: isDevelopment ? 'eval-cheap-module-source-map' : 'source-map',
@@ -74,19 +82,26 @@ module.exports = (_env, argv) => {
     },
     plugins: [
       new HtmlWebpackPlugin({ template: path.resolve(__dirname, 'index.html') }),
-      new webpack.DefinePlugin({ __DEV__: JSON.stringify(isDevelopment) }),
+      new webpack.DefinePlugin({
+        __DEV__: JSON.stringify(isDevelopment),
+        'process.env.LUNES_BASE_PATH': JSON.stringify(basePath),
+      }),
     ],
     devServer: {
       port: 8080,
-      historyApiFallback: true,
+      historyApiFallback: { index: `${basePath}/index.html` },
       // The CMS sends no CORS headers, so API requests go through the dev server (docs/web/0007-backend-access-and-cors.md)
       proxy: [
         {
-          context: ['/api'],
+          context: [`${basePath}/api`],
           target: process.env.LUNES_CMS_ORIGIN ?? 'https://lunes-test.tuerantuer.org',
           changeOrigin: true,
+          pathRewrite: basePath === '' ? undefined : { [`^${basePath}`]: '' },
         },
       ],
+      // Mock of an LMS course page that embeds the app in an iframe (only served by the dev server, docs/web/0012).
+      // Open it on another host than the app, e.g. http://127.0.0.1:8080/iframe-test/index.html, to get a cross-site iframe.
+      static: [{ directory: path.resolve(__dirname, 'iframe-test'), publicPath: '/iframe-test' }],
       client: { overlay: { errors: true, warnings: false } },
     },
   }

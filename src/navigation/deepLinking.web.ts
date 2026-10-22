@@ -1,5 +1,6 @@
 import { getPathFromState, getStateFromPath, LinkingOptions } from '@react-navigation/native'
 
+import { WEB_BASE_PATH } from '../constants/webBasePath'
 import Job from '../models/Job'
 import { StandardUnit } from '../models/Unit'
 import { RoutesParams } from './NavigationTypes'
@@ -72,6 +73,17 @@ export const toLinkableState = (state: State, isRoot = true): State => {
 
 const isStartPath = (path: string): boolean => path.replace(/^\//, '').split('?')[0] === ''
 
+// Removes the base path the web version is hosted under, e.g. /lunes/jobs/1 → /jobs/1 (docs/web/0012)
+export const withoutBasePath = (path: string, basePath: string): string => {
+  const isBelowBasePath =
+    basePath !== '' && (path === basePath || path.startsWith(`${basePath}/`) || path.startsWith(`${basePath}?`))
+  if (!isBelowBasePath) {
+    return path
+  }
+  const rest = path.slice(basePath.length)
+  return rest.startsWith('/') ? rest : `/${rest}`
+}
+
 type PathState = NonNullable<ReturnType<typeof getStateFromPath>>
 
 // The state of a unit URL only has Home below the unit. The units of its job are added in between,
@@ -85,6 +97,22 @@ const withUnitSelectionBelowUnit = (state: PathState): PathState => {
       : [withNestedState]
   })
   return { ...state, routes, ...(state.index === undefined ? {} : { index: routes.length - 1 }) }
+}
+
+// React Navigation keeps the path a route was opened with and reuses it as URL instead of calling getPathFromState.
+// That path has to contain the base path as well.
+const withBasePathInRoutes = (state: PathState): PathState => ({
+  ...state,
+  routes: state.routes.map(route => ({
+    ...route,
+    ...(route.path === undefined ? {} : { path: `${WEB_BASE_PATH}${route.path}` }),
+    ...(route.state === undefined ? {} : { state: withBasePathInRoutes(route.state) }),
+  })),
+})
+
+const pathOf = (state: State, options: Parameters<typeof getPathFromState>[1]): string => {
+  const linkableState = toLinkableState(state)
+  return linkableState.routes.length > 0 ? getPathFromState(linkableState, options) : '/'
 }
 
 const deepLinking: LinkingOptions<RoutesParams> = {
@@ -113,17 +141,15 @@ const deepLinking: LinkingOptions<RoutesParams> = {
     },
   },
   // Without a path the app decides itself whether to start with the job selection (first start) or the home screen
-  getStateFromPath: (path, options) => {
+  getStateFromPath: (pathWithBasePath, options) => {
+    const path = withoutBasePath(pathWithBasePath, WEB_BASE_PATH)
     if (isStartPath(path)) {
       return undefined
     }
     const state = getStateFromPath(path, options)
-    return state && withUnitSelectionBelowUnit(state)
+    return state && withBasePathInRoutes(withUnitSelectionBelowUnit(state))
   },
-  getPathFromState: (state, options) => {
-    const linkableState = toLinkableState(state)
-    return linkableState.routes.length > 0 ? getPathFromState(linkableState, options) : '/'
-  },
+  getPathFromState: (state, options) => `${WEB_BASE_PATH}${pathOf(state, options)}`,
 }
 
 export default deepLinking

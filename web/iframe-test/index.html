@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>LMS course page (Lunes iframe test)</title>
+    <!--
+      Mock of an LMS course page that embeds the Lunes web version (docs/web/0012-iframe-embedding.md).
+      Served by the dev server only: yarn web, then open http://127.0.0.1:8080/iframe-test/index.html.
+      The app is embedded from the other host (localhost <-> 127.0.0.1), so the iframe is cross-site like in an LMS.
+      Optional query parameter: ?src=<url of the app>
+    -->
+    <style>
+      body {
+        font-family: system-ui, sans-serif;
+        margin: 0;
+        background: #eef0f3;
+        color: #1d2433;
+      }
+
+      header {
+        padding: 12px 24px;
+        background: #3b4a6b;
+        color: #ffffff;
+      }
+
+      main {
+        max-width: 1100px;
+        margin: 0 auto;
+        padding: 16px 24px;
+      }
+
+      form {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 8px;
+      }
+
+      input {
+        flex: 1;
+        padding: 6px;
+      }
+
+      .links a {
+        margin-right: 12px;
+      }
+
+      .info {
+        font-size: 13px;
+        color: #4a5468;
+      }
+
+      iframe {
+        width: 100%;
+        height: 720px;
+        border: 1px solid #b8bfcc;
+        border-radius: 6px;
+        background: #ffffff;
+      }
+    </style>
+  </head>
+  <body>
+    <header><strong>Course: German for bakers</strong> · Lesson 3 · Lunes vocabulary trainer</header>
+    <main>
+      <form id="form">
+        <input id="url" type="url" aria-label="URL of the app" />
+        <button type="submit">Load</button>
+      </form>
+      <p class="links">
+        Examples (test CMS):
+        <a href="#" data-path="/">Start</a>
+        <a href="#" data-path="/jobs/219">Bäcker:in</a>
+        <a href="#" data-path="/jobs/219/units/843">Backwaren und Gebäcke</a>
+      </p>
+      <p class="info" id="info"></p>
+      <iframe id="app" title="Lunes" allow="autoplay; web-share"></iframe>
+    </main>
+    <script>
+      const otherHost = location.hostname === 'localhost' ? '127.0.0.1' : 'localhost'
+      const appOrigin = `${location.protocol}//${otherHost}:${location.port}`
+      const iframe = document.getElementById('app')
+      const input = document.getElementById('url')
+
+      const load = url => {
+        input.value = url
+        iframe.src = url
+        const isCrossSite = new URL(url).hostname !== location.hostname
+        document.getElementById('info').textContent =
+          `Course page: ${location.origin} · App: ${new URL(url).origin} · ` +
+          (isCrossSite ? 'cross-site iframe (like in an LMS)' : 'same-site iframe')
+      }
+
+      document.getElementById('form').addEventListener('submit', event => {
+        event.preventDefault()
+        load(input.value)
+      })
+      document.querySelectorAll('[data-path]').forEach(link =>
+        link.addEventListener('click', event => {
+          event.preventDefault()
+          load(`${appOrigin}${link.dataset.path}`)
+        }),
+      )
+
+      load(new URLSearchParams(location.search).get('src') ?? `${appOrigin}/`)
+    </script>
+  </body>
+</html>
