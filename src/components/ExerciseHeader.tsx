@@ -1,6 +1,5 @@
 import { StackNavigationProp } from '@react-navigation/stack'
 import React, { useEffect, useState, ReactElement } from 'react'
-import { BackHandler } from 'react-native'
 import { ProgressBar as RNProgressBar } from 'react-native-paper'
 import styled, { useTheme } from 'styled-components/native'
 
@@ -8,6 +7,7 @@ import { FeedbackIcon } from '../../assets/images'
 import { StandardExerciseKey } from '../constants/data'
 import { FeedbackTarget } from '../models/Feedback'
 import { Route, RoutesParams } from '../navigation/NavigationTypes'
+import { addHardwareBackPressListener } from '../services/hardwareBackPress'
 import { getLabels } from '../services/helpers'
 import FeedbackModal from './FeedbackModal'
 import Modal from './Modal'
@@ -123,7 +123,7 @@ const ExerciseHeader = ({
       }
       return false
     }
-    return BackHandler.addEventListener('hardwareBackPress', showModal).remove
+    return addHardwareBackPressListener(showModal)
   }, [confirmClose])
 
   const goBack = (): void => {

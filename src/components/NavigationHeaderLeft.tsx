@@ -15,6 +15,12 @@ const Container = styled.Pressable`
   align-items: center;
 `
 
+// The icon is replaced while pressed. Presses must therefore never target the icon itself: on web, the browser does
+// not dispatch a click if the element under the pointer is removed between mouse down and mouse up.
+const IconContainer = styled.View`
+  pointer-events: none;
+`
+
 type NavigationHeaderLeftProps = {
   title: string
   onPress: () => void
@@ -31,7 +37,9 @@ const NavigationHeaderLeft = ({ onPress, title, isCloseButton }: NavigationHeade
 
   return (
     <Container onPress={onPress} onPressIn={() => setPressed(true)} onPressOut={() => setPressed(false)}>
-      <Icon width={theme.sizes.defaultIcon} height={theme.sizes.defaultIcon} />
+      <IconContainer>
+        <Icon width={theme.sizes.defaultIcon} height={theme.sizes.defaultIcon} />
+      </IconContainer>
       <NavigationTitle numberOfLines={2}>{title}</NavigationTitle>
     </Container>
   )

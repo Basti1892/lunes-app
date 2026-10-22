@@ -26,7 +26,7 @@ Add a new ADR instead of rewriting an accepted one.
 | [0009](0009-persistence-on-web.md)              | Persistence on web              | Proposed |
 | [0010](0010-typescript-dom-lib.md)              | TypeScript `dom` lib            | Accepted |
 | [0011](0011-error-reporting-web.md)             | Error reporting on web          | Proposed |
-| [0012](0012-iframe-embedding.md)                | Iframe embedding                | Proposed |
+| [0012](0012-iframe-embedding.md)                | Iframe embedding                | Accepted |
 
 ## Implementation plan (small, testable steps)
 
@@ -109,9 +109,11 @@ After every step:
 
 **Step 8: Iframe readiness.**
 
-1. Add `web/iframe-test.html`, which embeds the build. Test storage persistence, audio after a user gesture, `speechSynthesis` and deep-link URLs in the iframe `src`.
-2. Make `publicPath` configurable for hosting under a subpath.
-3. Document the hosting requirements: SPA fallback, `frame-ancestors`, and CORS or a same-origin proxy.
+1. `web/iframe-test/index.html`: mock LMS course page, served by the dev server. Open http://127.0.0.1:8080/iframe-test/index.html; it embeds the app from `localhost`, so the iframe is cross-site.
+2. `LUNES_BASE_PATH` for hosting under a subpath: routes, assets and the `/api` proxy live below it (ADR 0012).
+3. Hosting requirements documented in ADR 0012: SPA fallback, `frame-ancestors`, API proxy or CORS.
+4. Verified: same-origin iframe (links, navigation, audio, TTS voices), the base path `/lunes` (build and dev server) and, by hand, a cross-site iframe (storage, audio, unit links). Still open: Safari.
+5. Fixes found while testing: the arrow of the header back button did not react on web, because the icon is replaced while pressed and the browser then drops the click (`NavigationHeaderLeft`: icon wrapped in a container with `pointer-events: none`). `ExerciseHeader` no longer uses `BackHandler` on web (adapter `src/services/hardwareBackPress.ts` + `.web.ts`), which logged an error in every exercise.
 
 **Step 9: Sentry web and production build.**
 
