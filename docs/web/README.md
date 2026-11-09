@@ -27,6 +27,7 @@ Add a new ADR instead of rewriting an accepted one.
 | [0010](0010-typescript-dom-lib.md)              | TypeScript `dom` lib            | Accepted |
 | [0011](0011-error-reporting-web.md)             | Error reporting on web          | Accepted |
 | [0012](0012-iframe-embedding.md)                | Iframe embedding                | Accepted |
+| [0013](0013-lti-connector-service.md)           | LTI connector as a service      | Accepted |
 
 ## Implementation plan (small, testable steps)
 
