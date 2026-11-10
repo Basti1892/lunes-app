@@ -29,6 +29,7 @@ Add a new ADR instead of rewriting an accepted one.
 | [0012](0012-iframe-embedding.md)                | Iframe embedding                  | Accepted |
 | [0013](0013-lti-connector-service.md)           | LTI connector as a service        | Accepted |
 | [0014](0014-lti-service-implementation.md)      | Implementation of the LTI service | Accepted |
+| [0015](0015-embedded-mode.md)                   | Embedded mode                     | Proposed |
 
 ## Implementation plan (small, testable steps)
 

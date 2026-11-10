@@ -9,6 +9,7 @@ import { ThemeProvider } from 'styled-components/native'
 import theme from './constants/theme'
 import Navigator from './navigation/Navigator'
 import deepLinking from './navigation/deepLinking'
+import EmbeddedModeProvider from './services/EmbeddedModeService'
 import ReducedMotionServiceProvider from './services/ReducedMotionService'
 import StorageProvider from './services/Storage'
 import TtsServiceProvider from './services/TtsService'
@@ -30,9 +31,11 @@ const App = (): ReactElement => {
             <VolumeServiceProvider>
               <TtsServiceProvider>
                 <ReducedMotionServiceProvider>
-                  <NavigationContainer linking={deepLinking}>
-                    <Navigator />
-                  </NavigationContainer>
+                  <EmbeddedModeProvider>
+                    <NavigationContainer linking={deepLinking}>
+                      <Navigator />
+                    </NavigationContainer>
+                  </EmbeddedModeProvider>
                 </ReducedMotionServiceProvider>
               </TtsServiceProvider>
             </VolumeServiceProvider>
