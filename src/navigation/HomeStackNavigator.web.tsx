@@ -6,12 +6,15 @@ import UnitSelectionScreen from '../routes/UnitSelectionScreen'
 import StandardExercisesScreen from '../routes/exercises/StandardExercisesScreen'
 import HomeScreen from '../routes/home/HomeScreen'
 import ManageSelectionsScreen from '../routes/manage-selections/ManageSelectionsScreen'
+import { useEmbeddedMode } from '../services/EmbeddedModeService'
 import { getLabels } from '../services/helpers'
 import { RoutesParams } from './NavigationTypes'
 import screenOptions, { useStackScreenOptions, useTabletHeaderHeight } from './screenOptions'
 
 // Home stack on web: only the screens of the minimal path (docs/web/0003-minimal-path-and-web-navigators.md).
 // Keep the remaining screens in sync with HomeStackNavigator.tsx.
+// In the embedded mode after an LTI launch, the vocabulary set selected in the LMS is the only screen of the stack
+// (docs/web/0015-embedded-mode.md).
 
 const Stack = createStackNavigator<RoutesParams>()
 
@@ -20,8 +23,26 @@ const HomeStackNavigator = (): ReactElement | null => {
   const { manageJobs, overview, units } = getLabels().general.header
   const theme = useTheme()
 
+  const stackScreenOptions = useStackScreenOptions({ cardStyle: { backgroundColor: theme.colors.background } })
+  const embeddedMode = useEmbeddedMode()
+
+  if (embeddedMode.type === 'active') {
+    const { jobId, unitId } = embeddedMode.session
+    // The key starts a new stack with the selected set, even if the URL pointed elsewhere
+    return (
+      <Stack.Navigator key={`embedded-${jobId}-${unitId}`} screenOptions={stackScreenOptions}>
+        <Stack.Screen
+          name='StandardExercises'
+          component={StandardExercisesScreen}
+          initialParams={{ jobId, unitId }}
+          options={({ navigation }) => ({ ...options(units, navigation), headerLeft: () => null })}
+        />
+      </Stack.Navigator>
+    )
+  }
+
   return (
-    <Stack.Navigator screenOptions={useStackScreenOptions({ cardStyle: { backgroundColor: theme.colors.background } })}>
+    <Stack.Navigator screenOptions={stackScreenOptions}>
       <Stack.Screen name='Home' component={HomeScreen} options={{ headerShown: false }} />
       <Stack.Screen
         name='UnitSelection'
