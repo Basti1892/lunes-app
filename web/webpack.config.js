@@ -125,6 +125,12 @@ module.exports = (_env, argv) => {
           changeOrigin: true,
           pathRewrite: basePath === '' ? undefined : { [`^${basePath}`]: '' },
         },
+        // LTI connector (lunes-lti, docs/web/0013-lti-connector-service.md), same origin as the app like in production
+        {
+          context: [`${basePath}/lti`],
+          target: process.env.LUNES_LTI_ORIGIN ?? 'http://127.0.0.1:5000',
+          pathRewrite: basePath === '' ? undefined : { [`^${basePath}`]: '' },
+        },
       ],
       // Mock of an LMS course page that embeds the app in an iframe (only served by the dev server, docs/web/0012).
       // Open it on another host than the app, e.g. http://127.0.0.1:8080/iframe-test/index.html, to get a cross-site iframe.

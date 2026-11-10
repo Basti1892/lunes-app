@@ -13,21 +13,22 @@ Each ADR is a short Markdown file `NNNN-short-title.md` with the sections Status
 Status is one of `Proposed`, `Accepted`, `Superseded by NNNN` or `Open` (needs a decision from outside this branch).
 Add a new ADR instead of rewriting an accepted one.
 
-| ADR                                             | Title                           | Status   |
-| ----------------------------------------------- | ------------------------------- | -------- |
-| [0001](0001-webpack-with-react-native-web.md)   | Webpack with react-native-web   | Accepted |
-| [0002](0002-platform-files-and-adapters.md)     | Platform files and adapters     | Accepted |
-| [0003](0003-minimal-path-and-web-navigators.md) | Minimal path and web navigators | Proposed |
-| [0004](0004-audio-and-tts.md)                   | Audio and text-to-speech        | Accepted |
-| [0005](0005-svg-icons-with-svgr.md)             | SVG icons with SVGR             | Accepted |
-| [0006](0006-web-dependency-placement.md)        | Placement of web dependencies   | Accepted |
-| [0007](0007-backend-access-and-cors.md)         | Backend access and CORS         | Open     |
-| [0008](0008-url-linking.md)                     | URL linking                     | Accepted |
-| [0009](0009-persistence-on-web.md)              | Persistence on web              | Proposed |
-| [0010](0010-typescript-dom-lib.md)              | TypeScript `dom` lib            | Accepted |
-| [0011](0011-error-reporting-web.md)             | Error reporting on web          | Accepted |
-| [0012](0012-iframe-embedding.md)                | Iframe embedding                | Accepted |
-| [0013](0013-lti-connector-service.md)           | LTI connector as a service      | Accepted |
+| ADR                                             | Title                             | Status   |
+| ----------------------------------------------- | --------------------------------- | -------- |
+| [0001](0001-webpack-with-react-native-web.md)   | Webpack with react-native-web     | Accepted |
+| [0002](0002-platform-files-and-adapters.md)     | Platform files and adapters       | Accepted |
+| [0003](0003-minimal-path-and-web-navigators.md) | Minimal path and web navigators   | Proposed |
+| [0004](0004-audio-and-tts.md)                   | Audio and text-to-speech          | Accepted |
+| [0005](0005-svg-icons-with-svgr.md)             | SVG icons with SVGR               | Accepted |
+| [0006](0006-web-dependency-placement.md)        | Placement of web dependencies     | Accepted |
+| [0007](0007-backend-access-and-cors.md)         | Backend access and CORS           | Open     |
+| [0008](0008-url-linking.md)                     | URL linking                       | Accepted |
+| [0009](0009-persistence-on-web.md)              | Persistence on web                | Proposed |
+| [0010](0010-typescript-dom-lib.md)              | TypeScript `dom` lib              | Accepted |
+| [0011](0011-error-reporting-web.md)             | Error reporting on web            | Accepted |
+| [0012](0012-iframe-embedding.md)                | Iframe embedding                  | Accepted |
+| [0013](0013-lti-connector-service.md)           | LTI connector as a service        | Accepted |
+| [0014](0014-lti-service-implementation.md)      | Implementation of the LTI service | Accepted |
 
 ## Implementation plan (small, testable steps)
 

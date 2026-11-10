@@ -48,7 +48,8 @@ Everything else may be hidden on web.
 ## Commands (Windows, Yarn via corepack)
 
 - `corepack enable`, then `yarn install`
-- `yarn web`: dev server on http://localhost:8080 (proxies `/api` to the lunes-test CMS)
+- `yarn web`: dev server on http://localhost:8080 (proxies `/api` to the lunes-test CMS and `/lti` to a local
+  lunes-lti on port 5000, override with `LUNES_LTI_ORIGIN`)
 - `yarn web:build`: production bundle in `build/web`
 - Native: `yarn start`, `yarn android`, `yarn ios` (must keep working)
 - `yarn web` and open http://127.0.0.1:8080/iframe-test/index.html: the app in a cross-site iframe on a mock LMS page
