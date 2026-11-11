@@ -3,7 +3,7 @@
 ## Status
 
 Proposed (steps a and b of the embedded mode: session token, launch data, navigation restricted to the selected set;
-result reporting, submission state and the link back to the course follow)
+result reporting in 0016; submission state and the link back to the course follow)
 
 ## Context
 
@@ -44,6 +44,9 @@ not change.
     (from the URL) are dropped.
   - While the session loads, and if it expired or the service is unreachable, the normal navigation stays. Step d
     shows the state; the selected set is only known from the service.
+- **No sharing in the embedded mode.** The result screen hides "Ergebnisse teilen" when the app was launched from an
+  LMS (any state other than `standalone`): in school, results go to the gradebook, not to friends. `ShareSection`
+  (shared) reads the embedded mode; the apps are always standalone, so they keep the section.
 
 ## Consequences
 

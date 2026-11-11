@@ -53,8 +53,10 @@ HTTPS request. It caches the whole launch token, which in Moodle contains the us
   setup with `base_url` `http://localhost:8080`) launches the tool in the course page iframe. The app opens the
   selected vocabulary set; word list, exercise and result screen work inside the iframe. The partitioned login cookies
   survived the cross-site launch, the cookie check page was not needed.
-- Still open: Safari, a browser that blocks third-party cookies (fallback to a new tab), and the deployed service over
-  HTTPS.
+- Verified on 2026-11-11 in an InPrivate window of Edge, which blocks third-party cookies: the cookie check page
+  appears in the iframe ("Dein Browser erlaubt keine Cookies in eingebetteten Inhalten"), and its link opens Lunes in
+  a new tab, where the launch works as a first-party page.
+- Still open: Safari and the deployed service over HTTPS.
 - In development, Chrome and Edge ask once per Moodle site for permission to access apps and services on the device
   (Local Network Access), because a public site embeds `localhost`. The deployed service on a public host does not
   trigger it.

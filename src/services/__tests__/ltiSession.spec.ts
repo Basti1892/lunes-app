@@ -1,4 +1,11 @@
-import { extractToken, getStoredToken, loadLtiSession, takeTokenFromUrl, TOKEN_STORAGE_KEY } from '../ltiSession'
+import {
+  extractToken,
+  getStoredToken,
+  loadLtiSession,
+  sendResult,
+  takeTokenFromUrl,
+  TOKEN_STORAGE_KEY,
+} from '../ltiSession'
 
 const createStorage = (): Pick<Storage, 'getItem' | 'setItem'> => {
   const items = new Map<string, string>()
@@ -76,6 +83,35 @@ describe('ltiSession', () => {
       await expect(loadLtiSession('abc', jest.fn().mockRejectedValue(new TypeError('offline')))).resolves.toEqual({
         type: 'error',
       })
+    })
+  })
+
+  describe('sendResult', () => {
+    it('should post the result with the token', async () => {
+      const fetchMock = jest.fn().mockResolvedValue(response(204, null))
+
+      await expect(sendResult('abc', { correct: 6, total: 8 }, fetchMock)).resolves.toEqual({ type: 'submitted' })
+      expect(fetchMock).toHaveBeenCalledWith('/lti/results', {
+        method: 'POST',
+        headers: { Authorization: 'Bearer abc', 'Content-Type': 'application/json' },
+        body: JSON.stringify({ correct: 6, total: 8 }),
+      })
+    })
+
+    it.each([
+      [401, 'expired'],
+      [409, 'notGraded'],
+      [502, 'error'],
+    ])('should map status %d to %s', async (status, type) => {
+      await expect(
+        sendResult('abc', { correct: 1, total: 1 }, jest.fn().mockResolvedValue(response(status, {}))),
+      ).resolves.toEqual({ type })
+    })
+
+    it('should report network errors', async () => {
+      await expect(
+        sendResult('abc', { correct: 1, total: 1 }, jest.fn().mockRejectedValue(new TypeError('offline'))),
+      ).resolves.toEqual({ type: 'error' })
     })
   })
 })

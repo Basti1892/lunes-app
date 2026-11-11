@@ -2,6 +2,7 @@ import React, { ReactElement } from 'react'
 import styled from 'styled-components/native'
 
 import { VocabularyItemResult } from '../../../navigation/NavigationTypes'
+import { useEmbeddedMode } from '../../../services/EmbeddedModeService'
 import { getLabels } from '../../../services/helpers'
 import { canShare } from '../../../services/share'
 import ShareButton from './ShareButton'
@@ -33,7 +34,10 @@ type ShareSectionProps = {
 }
 
 const ShareSection = ({ unitTitle, results }: ShareSectionProps): ReactElement | null => {
-  if (!canShare()) {
+  // Not offered when launched from an LMS course: learners share their results in school, not with friends
+  // (docs/web/0015-embedded-mode.md). The apps are always standalone.
+  const embeddedMode = useEmbeddedMode()
+  if (!canShare() || embeddedMode.type !== 'standalone') {
     return null
   }
   return (

@@ -8,6 +8,8 @@ export const TOKEN_FRAGMENT_PARAM = 'lti_token'
 export const TOKEN_STORAGE_KEY = 'lunes-lti-token'
 // lunes-lti answers 401 for an expired, unknown or missing token
 const HTTP_UNAUTHORIZED = 401
+// The activity in the LMS does not accept grades
+const HTTP_CONFLICT = 409
 
 export type LtiSession = {
   jobId: number
@@ -79,6 +81,45 @@ export const loadLtiSession = async (token: string, fetchFunction: typeof fetch 
     }
     const body: unknown = await response.json()
     return isLtiSession(body) ? { type: 'active', session: body } : { type: 'error' }
+  } catch {
+    return { type: 'error' }
+  }
+}
+
+export type ExerciseResult = {
+  // Words answered correctly on the first try, as shown on the result screen
+  correct: number
+  total: number
+}
+
+// State of sending a result to the LMS gradebook (docs/web/0016-grade-passback.md)
+export type ResultReport =
+  | { type: 'none' }
+  | { type: 'sending' }
+  | { type: 'submitted' }
+  // The activity in the LMS does not accept grades
+  | { type: 'notGraded' }
+  | { type: 'expired' }
+  | { type: 'error' }
+
+export const sendResult = async (
+  token: string,
+  result: ExerciseResult,
+  fetchFunction: typeof fetch = fetch,
+): Promise<ResultReport> => {
+  try {
+    const response = await fetchFunction(`${WEB_BASE_PATH}/lti/results`, {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify(result),
+    })
+    if (response.ok) {
+      return { type: 'submitted' }
+    }
+    if (response.status === HTTP_UNAUTHORIZED) {
+      return { type: 'expired' }
+    }
+    return response.status === HTTP_CONFLICT ? { type: 'notGraded' } : { type: 'error' }
   } catch {
     return { type: 'error' }
   }
