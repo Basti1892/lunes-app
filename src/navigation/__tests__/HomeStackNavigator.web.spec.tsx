@@ -1,9 +1,10 @@
-import { NavigationContainer } from '@react-navigation/native'
+import { InitialState, NavigationContainer } from '@react-navigation/native'
 import { screen } from '@testing-library/react-native'
 import React, { ReactElement } from 'react'
 import { Text } from 'react-native'
 
 import { EmbeddedMode, EmbeddedModeContext } from '../../services/EmbeddedModeService'
+import { getLabels } from '../../services/helpers'
 import render from '../../testing/render'
 import HomeStackNavigator from '../HomeStackNavigator.web'
 
@@ -20,10 +21,10 @@ jest.mock('../../routes/exercises/StandardExercisesScreen', () => ({
   ),
 }))
 
-const renderStack = (embeddedMode: EmbeddedMode) =>
+const renderStack = (embeddedMode: EmbeddedMode, initialState?: InitialState) =>
   render(
     <EmbeddedModeContext.Provider value={embeddedMode}>
-      <NavigationContainer>
+      <NavigationContainer initialState={initialState}>
         <HomeStackNavigator />
       </NavigationContainer>
     </EmbeddedModeContext.Provider>,
@@ -43,5 +44,30 @@ describe('HomeStackNavigator (web)', () => {
     expect(screen.queryByText('Home')).toBeNull()
     // The label of the header back button ("Einheiten")
     expect(screen.queryByText(/einheiten/i)).toBeNull()
+  })
+
+  it('should show the unit of the session even if the URL points to another unit', () => {
+    renderStack(
+      { type: 'active', session: { jobId: 47, unitId: 304, returnUrl: null, expiresAt: 1 } },
+      { routes: [{ name: 'StandardExercises', params: { jobId: 47, unitId: 999 } }] },
+    )
+
+    expect(screen.getByText('Unit 47/304')).toBeTruthy()
+    expect(screen.queryByText('Unit 47/999')).toBeNull()
+  })
+
+  it('should link back to the course in the top-level window in the embedded mode', () => {
+    const returnUrl = 'https://lms.example/mod/lti/return.php?course=2'
+    renderStack({ type: 'active', session: { jobId: 47, unitId: 304, returnUrl, expiresAt: 1 } })
+
+    expect(screen.getByText(getLabels().general.header.backToCourse)).toBeTruthy()
+    expect(screen.UNSAFE_getByProps({ href: returnUrl }).props.target).toBe('_top')
+  })
+
+  it('should not link to a return URL that is not a web address', () => {
+    // eslint-disable-next-line no-script-url
+    renderStack({ type: 'active', session: { jobId: 47, unitId: 304, returnUrl: 'javascript:alert(1)', expiresAt: 1 } })
+
+    expect(screen.queryByText(getLabels().general.header.backToCourse)).toBeNull()
   })
 })

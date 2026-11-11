@@ -4,6 +4,7 @@ import React from 'react'
 
 import { StandardExerciseKey, EXERCISES, StandardExerciseKeys } from '../../../constants/data'
 import { Features } from '../../../constants/features'
+import useReportResult from '../../../hooks/useReportResult'
 import { StandardUnitId } from '../../../models/Unit'
 import { RoutesParams } from '../../../navigation/NavigationTypes'
 import { getLabels, wordsDescription } from '../../../services/helpers'
@@ -18,6 +19,11 @@ jest.mock('../../../constants/features', () => ({
   get FEATURES() {
     return mockFeatures
   },
+}))
+
+jest.mock('../../../hooks/useReportResult', () => ({
+  __esModule: true,
+  default: jest.fn(() => ({ type: 'none' })),
 }))
 
 describe('ExerciseFinishedScreen', () => {
@@ -119,5 +125,20 @@ describe('ExerciseFinishedScreen', () => {
     const summaryMessage = `${correctWords} ${getLabels().results.of} ${wordsDescription(totalWords)} ${getLabels().results.correct}`
     expect(getByText(summaryMessage)).toBeVisible()
     expect(getByText(getLabels().results.action.repeat)).toBeVisible()
+  })
+
+  it('should show whether the result reached the LMS', () => {
+    jest.mocked(useReportResult).mockReturnValue({ type: 'submitted' })
+    const route = getRoute(StandardExerciseKeys.wordChoiceExercise, true)
+
+    const { getByText } = render(<ExerciseFinishedScreen route={route} navigation={navigation} />)
+
+    expect(getByText(getLabels().results.lms.submitted)).toBeDefined()
+    expect(useReportResult).toHaveBeenCalledWith({
+      exercise: StandardExerciseKeys.wordChoiceExercise,
+      results: route.params.results,
+      unitId,
+    })
+    jest.mocked(useReportResult).mockReturnValue({ type: 'none' })
   })
 })

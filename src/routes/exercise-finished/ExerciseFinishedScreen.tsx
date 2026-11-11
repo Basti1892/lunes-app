@@ -21,6 +21,7 @@ import useReportResult from '../../hooks/useReportResult'
 import { RoutesParams } from '../../navigation/NavigationTypes'
 import { calculateScore, getLabels } from '../../services/helpers'
 import ExerciseFinishedBase from './components/ExerciseFinishedBase'
+import ResultReportSection from './components/ResultReportSection'
 import ShareSection from './components/ShareSection'
 
 const ContainerText = styled.Text`
@@ -43,8 +44,8 @@ const ExerciseFinishedScreen = ({ navigation, route }: ExerciseFinishedScreenPro
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false)
   const correctOnFirstAttempt = results.filter(doc => doc.numberOfTries === 1)
   const score = calculateScore(results)
-  // Sends the result to the LMS after an LTI launch (web only); the state is shown in a later step
-  useReportResult({ exercise, results, unitId: route.params.unitId })
+  // Sends the result to the LMS after an LTI launch (web only)
+  const resultReport = useReportResult({ exercise, results, unitId: route.params.unitId })
 
   const { exercise: notNeededForNavigation1, results: notNeededForNavigation2, ...navigationParams } = route.params
   const repeatExercise = (): void => navigation.popTo(EXERCISES[exercise].screen, { ...navigationParams })
@@ -134,6 +135,7 @@ const ExerciseFinishedScreen = ({ navigation, route }: ExerciseFinishedScreenPro
         message={message}
         onBack={() => navigation.pop()}
       >
+        <ResultReportSection report={resultReport} />
         <Button label={buttonText} buttonTheme={BUTTONS_THEME.contained} onPress={navigationAction} />
         <ShareSection unitTitle={unitTitle} results={results} />
       </ExerciseFinishedBase>

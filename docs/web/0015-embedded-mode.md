@@ -2,8 +2,8 @@
 
 ## Status
 
-Proposed (steps a and b of the embedded mode: session token, launch data, navigation restricted to the selected set;
-result reporting in 0016; submission state and the link back to the course follow)
+Proposed (steps a, b and d of the embedded mode: session token, launch data, navigation restricted to the selected
+set, submission state and the link back to the course; result reporting in 0016)
 
 ## Context
 
@@ -39,19 +39,40 @@ not change.
   (`HomeStackNavigator.web.tsx`) registers only `StandardExercises`, with the job and unit of the session as params and
   without the header back button ("Einheiten"). The other screens of the minimal path are not reachable from there:
   exercises and the result screen only go back to the unit (`pop`), and the repetition tab does not exist on web.
-  - The navigator gets a key per session (`embedded-<job>-<unit>`). The stack therefore starts anew with the selected
-    set when the session has loaded, even if the URL pointed to another unit; Home and UnitSelection below the unit
-    (from the URL) are dropped.
+  - The navigator gets a key per session (`embedded-<job>-<unit>`). The stack therefore starts anew when the session
+    has loaded; Home and UnitSelection below the unit (from the URL) are dropped.
+  - The screen always gets the job and unit of the session (`EmbeddedUnitScreen`), not the params of the route: React
+    Navigation fills them from the URL, and they win over `initialParams`. Found in step d: with a session for unit
+    847, the URL `/jobs/219/units/849` showed unit 849, so the set could be changed by editing the URL. `setParams`
+    did not correct the params of the restored route, so the screen ignores them. The address bar may keep the other
+    unit ID; it has no effect.
   - While the session loads, and if it expired or the service is unreachable, the normal navigation stays. Step d
     shows the state; the selected set is only known from the service.
 - **No sharing in the embedded mode.** The result screen hides "Ergebnisse teilen" when the app was launched from an
   LMS (any state other than `standalone`): in school, results go to the gradebook, not to friends. `ShareSection`
   (shared) reads the embedded mode; the apps are always standalone, so they keep the section.
 
+- **Submission state on the result screen (FR-11, FR-12).** `ExerciseFinished` shows the state returned by
+  `useReportResult` below the score (`ResultReportSection`, shared): sending, submitted, the activity does not accept
+  grades, session expired (open Lunes again from the course), or not submitted (finish the exercise again to resend).
+  Problems are shown in the colour for incorrect answers. The text is a polite live region, so screen readers announce
+  the change. Without a launch the state is `none` and nothing is shown, so the apps are unchanged.
+- **Link back to the course (FR-13).** In the embedded mode, the header of the unit shows "Zurück zum Kurs" where the
+  back button was: an HTML link (`BackToCourseLink.tsx`, used only by `HomeStackNavigator.web.tsx`) to the return URL
+  of the LMS with `target="_top"`, so the LMS page replaces the whole tab instead of opening inside the iframe. Only
+  `http` and `https` URLs are linked (lunes-lti checks the same); without a return URL the header stays empty. A link
+  rather than a script: it works with the keyboard, shows its target, and needs no access to the parent window.
+
 ## Consequences
 
-- Visible change: after a launch, the unit has no back button. The next steps report results on `ExerciseFinished`
-  and show the submission state and the link back (in the header, where the back button was).
+- Visible change: after a launch, the unit header shows "Zurück zum Kurs" instead of the back button, and the result
+  screen tells whether the result reached the gradebook.
+- Verified on 2026-11-11 in the browser with a stand-in for lunes-lti (dev server, session for unit 616 with a return
+  URL): the header shows "Zurück zum Kurs" as a link with `target="_top"`; a URL with another unit shows the unit of
+  the session; after the word choice exercise (5 of 6 correct on the first try) the app sent `{"correct":5,"total":6}`
+  once and the result screen showed "Dein Ergebnis wurde an den Kurs übertragen." Not yet verified inside Moodle.
+- Still open: while the session loads, and when it has expired or the service is unreachable at start, the app shows
+  the normal navigation without a hint (FR-11 is covered only when a result is sent).
 - The native navigators are unchanged; only `HomeStackNavigator.web.tsx` reads the embedded mode.
 - `App.tsx` (shared) gains one provider; on native it renders only its children.
 - Verified in the browser (dev server, lunes-lti not running): a URL with `#lti_token=…` is cleaned before the app

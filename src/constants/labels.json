@@ -181,6 +181,13 @@
       "message1": "Meine Ergebnisse für",
       "message2": "in Lunes:",
       "message3": "Wörter richtig. Und du?"
+    },
+    "lms": {
+      "sending": "Dein Ergebnis wird an den Kurs übertragen …",
+      "submitted": "Dein Ergebnis wurde an den Kurs übertragen.",
+      "notGraded": "Diese Aktivität im Kurs nimmt keine Ergebnisse an.",
+      "expired": "Deine Sitzung ist abgelaufen. Öffne Lunes im Kurs neu, damit dein Ergebnis übertragen wird.",
+      "error": "Dein Ergebnis konnte nicht an den Kurs übertragen werden. Mach die Übung später noch einmal, dann wird es erneut gesendet."
     }
   },
   "feedback": {
@@ -207,7 +214,8 @@
       "settings": "Einstellungen",
       "wordFeedback": "Feedback geben",
       "menu": "Menü",
-      "activationCodeEntry": "Code eingeben"
+      "activationCodeEntry": "Code eingeben",
+      "backToCourse": "Zurück zum Kurs"
     },
     "back": "Zurück",
     "close": "Schließen",
