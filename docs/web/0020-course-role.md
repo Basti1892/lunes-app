@@ -2,7 +2,7 @@
 
 ## Status
 
-Proposed (to be accepted after a launch by a teacher in Moodle)
+Accepted (launches by a teacher and a student in Moodle on 2026-11-12)
 
 ## Context
 
@@ -37,5 +37,6 @@ sub-roles such as `…/membership/Instructor#TeachingAssistant`; LTI 1.3 also al
 - People with the role `other` (e.g. a site administrator without a role in the course, a mentor) get the preview
   text, which addresses teachers; acceptable, as they are not graded either.
 - Launches stored before this change count as learner launches (database migration with the default `learner`).
-- Tested with unit tests and the end-to-end tests of lunes-lti (learner and instructor launches). Not yet tested with
-  Moodle.
+- Tested with unit tests, the end-to-end tests of lunes-lti (learner and instructor launches) and in Moodle on
+  2026-11-12 (development setup): a teacher launch was logged as `role instructor` and the result screen showed the
+  preview text; a student launch was logged as `role learner` and the grade reached the gradebook.
