@@ -2,7 +2,7 @@
 
 ## Status
 
-Proposed (to be accepted after the first score with time on task in Moodle)
+Accepted (first scores with time on task in the Moodle gradebook on 2026-11-12)
 
 ## Context
 
@@ -39,4 +39,6 @@ gradebook for teachers and for the learner.
 - Like the result itself, the duration comes from the browser and can be manipulated (0016).
 - Results without `durationSeconds` (older app versions) are still accepted and sent without comment.
 - A teacher's own feedback in Moodle is overwritten by the next score of the tool.
-- Tested with unit tests in both repositories and the end-to-end test of lunes-lti. Not yet tested with Moodle.
+- Tested with unit tests in both repositories, the end-to-end test of lunes-lti and in Moodle on 2026-11-12: the user
+  report of the course showed the feedback "Bearbeitungszeit: 1 min 35 s" and "Bearbeitungszeit: 31 s" next to the
+  grades of two activities (one created with Deep Linking).

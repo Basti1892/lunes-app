@@ -3,6 +3,7 @@ import styled, { css } from 'styled-components/native'
 
 import useVocabularyNote from '../hooks/useVocabularyNote'
 import { VocabularyItemId } from '../models/VocabularyItem'
+import { useEmbeddedMode } from '../services/EmbeddedModeService'
 import { getLabels } from '../services/helpers'
 import AddVocabularyNoteButton from './AddVocabularyNoteButton'
 import VocabularyNoteCard from './VocabularyNoteCard'
@@ -37,11 +38,17 @@ type VocabularyNotePreviewProps = {
   hasBorder?: boolean
 }
 
-const VocabularyNotePreview = ({ wordId, hasBorder = false }: VocabularyNotePreviewProps): ReactElement => {
+const VocabularyNotePreview = ({ wordId, hasBorder = false }: VocabularyNotePreviewProps): ReactElement | null => {
   const { note, isEditorOpen, openEditor, closeEditor } = useVocabularyNote(wordId)
   const [isNoteTruncated, setIsNoteTruncated] = useState<boolean>(false)
 
+  // Not offered when launched from an LMS course, like VocabularyNoteSection (docs/web/0015-embedded-mode.md)
+  const embeddedMode = useEmbeddedMode()
   const { heading, showMore } = getLabels().notes
+
+  if (embeddedMode.type !== 'standalone') {
+    return null
+  }
 
   return (
     <>

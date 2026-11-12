@@ -5,6 +5,7 @@ import { PenIcon, TrashIcon } from '../../assets/images'
 import { useStorageCache } from '../hooks/useStorage'
 import useVocabularyNote from '../hooks/useVocabularyNote'
 import { VocabularyItemId } from '../models/VocabularyItem'
+import { useEmbeddedMode } from '../services/EmbeddedModeService'
 import { getLabels } from '../services/helpers'
 import { reportError } from '../services/sentry'
 import { deleteVocabularyNote } from '../services/storageUtils'
@@ -53,11 +54,14 @@ type VocabularyNoteSectionProps = {
   wordId: VocabularyItemId
 }
 
-const VocabularyNoteSection = ({ wordId }: VocabularyNoteSectionProps): ReactElement => {
+const VocabularyNoteSection = ({ wordId }: VocabularyNoteSectionProps): ReactElement | null => {
   const theme = useTheme()
   const storageCache = useStorageCache()
   const { note, isEditorOpen, openEditor, closeEditor } = useVocabularyNote(wordId)
   const [isDeletionConfirmationVisible, setIsDeletionConfirmationVisible] = useState<boolean>(false)
+  // Not offered when launched from an LMS course: notes stay in the browser, which may be shared in school, and are
+  // not part of the course (docs/web/0015-embedded-mode.md). The apps are always standalone.
+  const embeddedMode = useEmbeddedMode()
 
   const {
     heading,
@@ -101,6 +105,10 @@ const VocabularyNoteSection = ({ wordId }: VocabularyNoteSectionProps): ReactEle
         </BorderedVocabularyNoteCard>
       </>
     )
+  }
+
+  if (embeddedMode.type !== 'standalone') {
+    return null
   }
 
   return (

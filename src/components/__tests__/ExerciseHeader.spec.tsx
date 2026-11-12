@@ -1,9 +1,10 @@
 import { act, fireEvent } from '@testing-library/react-native'
-import React from 'react'
+import React, { ReactElement } from 'react'
 import { BackHandler } from 'react-native'
 
 import { StandardExerciseKeys } from '../../constants/data'
 import { VocabularyItemTypes } from '../../models/VocabularyItem'
+import { EmbeddedMode, EmbeddedModeContext } from '../../services/EmbeddedModeService'
 import { getLabels } from '../../services/helpers'
 import createNavigationMock from '../../testing/createNavigationPropMock'
 import render from '../../testing/render'
@@ -54,5 +55,26 @@ describe('ExerciseHeader', () => {
     fireEvent.press(getByText(getLabels().exercises.cancelModal.cancel))
 
     expect(navigation.pop).toHaveBeenCalled()
+  })
+
+  it.each<[EmbeddedMode, boolean]>([
+    [{ type: 'standalone' }, true],
+    [{ type: 'active', session: { jobId: 1, unitId: 2, returnUrl: null, expiresAt: 1 } }, false],
+  ])('should offer word feedback only when standalone (%j)', (embeddedMode, isOffered) => {
+    const setOptions = jest.fn()
+    render(
+      <EmbeddedModeContext.Provider value={embeddedMode}>
+        <ExerciseHeader
+          navigation={{ ...navigation, setOptions }}
+          currentWord={0}
+          numberOfWords={3}
+          feedbackTarget={{ type: 'word', wordId: { type: VocabularyItemTypes.Standard, id: 1 } }}
+        />
+      </EmbeddedModeContext.Provider>,
+    )
+
+    const { headerRight } = setOptions.mock.calls.at(-1)[0] as { headerRight: () => ReactElement }
+    const { queryByLabelText } = render(headerRight())
+    expect(queryByLabelText(getLabels().general.header.wordFeedback) !== null).toBe(isOffered)
   })
 })

@@ -51,6 +51,16 @@ not change.
 - **No sharing in the embedded mode.** The result screen hides "Ergebnisse teilen" when the app was launched from an
   LMS (any state other than `standalone`): in school, results go to the gradebook, not to friends. `ShareSection`
   (shared) reads the embedded mode; the apps are always standalone, so they keep the section.
+- **No favorites and no word feedback in the embedded mode** (decided by the author of the thesis on 2026-11-12). The
+  star (`FavoriteButton`, exercise and word list) saves a favorite that no web screen shows, and navigation is
+  restricted to the selected set anyway. The feedback button in the exercise header (`ExerciseHeader`) sends a comment
+  and an optional e-mail address to the Lunes CMS, a channel from learners to a third party outside the course
+  (NFR-04, NFR-10); in a course, the teacher is the contact for content problems. Both components read the embedded
+  mode like `ShareSection`; the standalone web version and the apps keep them.
+- **No notes in the embedded mode** (decided by the author of the thesis on 2026-11-12). "Notiz hinzufügen" in the word
+  list (`VocabularyNoteSection`) and after an answer in the exercise (`VocabularyNotePreview`) is hidden. Notes work
+  on web, but they stay in the browser: on a computer shared in school the next learner sees them, browsers keep the
+  storage of an embedded iframe separately per LMS site and may clear it, and they are not part of the course.
 
 - **Submission state on the result screen (FR-11, FR-12).** `ExerciseFinished` shows the state returned by
   `useReportResult` below the score (`ResultReportSection`, shared): sending, submitted, the activity does not accept
@@ -94,3 +104,8 @@ not change.
 - Moodle's return URL points to `/mod/lti/return.php?course=…&launch_container=…`, a Moodle page that leads back to
   the course. Opened inside the iframe it would show the course page within the course page, so the link back
   (FR-13) has to open it in the top-level window (`target="_top"`).
+- Two scrollbars in Moodle (accepted, decided by the author of the thesis on 2026-11-12): Moodle sets the height of the
+  embedded iframe to the window height below its top edge (`mod/lti/view.php`), and the course page has its footer
+  below it, so the page scrolls as well as the app inside. Moodle does not support `lti.frameResize` messages, so the
+  app cannot change the iframe height. Theme CSS on `#page-mod-lti-view` or the launch container "New window" would
+  remove the outer scrollbar, at the cost of the footer or the embedding.

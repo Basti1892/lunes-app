@@ -5,6 +5,7 @@ import { StarCircleIconGrey, StarCircleIconGreyFilled } from '../../assets/image
 import useRepetitionService from '../hooks/useRepetitionService'
 import useStorage, { useStorageCache } from '../hooks/useStorage'
 import VocabularyItem from '../models/VocabularyItem'
+import { useEmbeddedMode } from '../services/EmbeddedModeService'
 import { getLabels } from '../services/helpers'
 import { reportError } from '../services/sentry'
 import { addFavorite, isFavorite as getIsFavorite, removeFavorite } from '../services/storageUtils'
@@ -20,6 +21,13 @@ const FavoriteButton = ({ vocabularyItem }: FavoriteButtonProps): ReactElement |
   const [favorites] = useStorage('favorites')
   const isFavorite = getIsFavorite(favorites, vocabularyItem.id)
   const theme = useTheme()
+  // Not offered when launched from an LMS course: the web version has no screen that shows favorites
+  // (docs/web/0015-embedded-mode.md). The apps are always standalone.
+  const embeddedMode = useEmbeddedMode()
+
+  if (embeddedMode.type !== 'standalone') {
+    return null
+  }
 
   const onPress = async () => {
     if (isFavorite) {

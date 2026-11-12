@@ -3,6 +3,7 @@ import { fireEvent, waitFor } from '@testing-library/react-native'
 import React from 'react'
 
 import { Favorite } from '../../constants/data'
+import { EmbeddedModeContext } from '../../services/EmbeddedModeService'
 import { StorageCache } from '../../services/Storage'
 import { getLabels } from '../../services/helpers'
 import { isFavorite } from '../../services/storageUtils'
@@ -26,6 +27,18 @@ describe('FavoriteButton', () => {
 
   beforeEach(() => {
     storageCache = StorageCache.createDummy()
+  })
+
+  it('should not be offered after an LTI launch', () => {
+    const { queryByTestId } = renderWithStorageCache(
+      storageCache,
+      <EmbeddedModeContext.Provider value={{ type: 'loading' }}>
+        <FavoriteButton vocabularyItem={vocabularyItem} />
+      </EmbeddedModeContext.Provider>,
+    )
+
+    expect(queryByTestId('add')).toBeNull()
+    expect(queryByTestId('remove')).toBeNull()
   })
 
   it('should add favorite on click', async () => {

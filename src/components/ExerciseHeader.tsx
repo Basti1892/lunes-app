@@ -7,6 +7,7 @@ import { FeedbackIcon } from '../../assets/images'
 import { StandardExerciseKey } from '../constants/data'
 import { FeedbackTarget } from '../models/Feedback'
 import { Route, RoutesParams } from '../navigation/NavigationTypes'
+import { useEmbeddedMode } from '../services/EmbeddedModeService'
 import { addHardwareBackPressListener } from '../services/hardwareBackPress'
 import { getLabels } from '../services/helpers'
 import FeedbackModal from './FeedbackModal'
@@ -58,7 +59,10 @@ const ExerciseHeader = ({
 }: ExerciseHeaderProps): ReactElement => {
   const [isModalVisible, setIsModalVisible] = useState(false)
   const [isFeedbackModalVisible, setIsFeedbackModalVisible] = useState(false)
-  const shouldShowFeedback = feedbackTarget !== undefined
+  // Feedback goes to the Lunes CMS, outside the course; not offered when launched from an LMS course
+  // (docs/web/0015-embedded-mode.md). The apps are always standalone.
+  const embeddedMode = useEmbeddedMode()
+  const shouldShowFeedback = feedbackTarget !== undefined && embeddedMode.type === 'standalone'
   const theme = useTheme()
   const showProgress = numberOfWords !== undefined && numberOfWords > 0 && currentWord !== undefined
   const progressText = showProgress ? `${currentWord + 1} / ${numberOfWords}` : ''
@@ -151,7 +155,7 @@ const ExerciseHeader = ({
         confirmationButtonText={getLabels().exercises.cancelModal.cancel}
         confirmationAction={goBack}
       />
-      {feedbackTarget !== undefined && (
+      {feedbackTarget !== undefined && shouldShowFeedback && (
         <FeedbackModal
           visible={isFeedbackModalVisible}
           onClose={() => setIsFeedbackModalVisible(false)}

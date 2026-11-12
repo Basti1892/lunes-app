@@ -1,6 +1,7 @@
 import { act, fireEvent } from '@testing-library/react-native'
 import React from 'react'
 
+import { EmbeddedModeContext } from '../../services/EmbeddedModeService'
 import { StorageCache } from '../../services/Storage'
 import { getLabels } from '../../services/helpers'
 import { saveVocabularyNote } from '../../services/storageUtils'
@@ -20,6 +21,19 @@ describe('VocabularyNotePreview', () => {
   })
 
   const renderResult = () => renderWithStorageCache(storageCache, <VocabularyNotePreview wordId={wordId} />)
+
+  it('should not be offered after an LTI launch', async () => {
+    await saveVocabularyNote(storageCache, wordId, noteText)
+    const { queryByText } = renderWithStorageCache(
+      storageCache,
+      <EmbeddedModeContext.Provider value={{ type: 'expired' }}>
+        <VocabularyNotePreview wordId={wordId} />
+      </EmbeddedModeContext.Provider>,
+    )
+
+    expect(queryByText(noteText)).toBeNull()
+    expect(queryByText(getLabels().notes.add)).toBeNull()
+  })
 
   describe('when no note exists', () => {
     it('should offer to add one without showing the section', () => {
