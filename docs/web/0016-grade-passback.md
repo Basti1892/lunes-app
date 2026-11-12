@@ -2,7 +2,7 @@
 
 ## Status
 
-Proposed (step c of the embedded mode, 0015; to be accepted after the first grade in the Moodle gradebook)
+Accepted (step c of the embedded mode, 0015; first grade in the Moodle gradebook on 2026-11-11)
 
 ## Context
 
@@ -53,3 +53,10 @@ sent last.
   from Apache to PHP-FPM (`proxy_fcgi`), which drops the `Authorization` header by default. Fix in the salt repository:
   `CGIPassAuth On` for the Moodle directory (merge request `feature/moodle-cgipassauth`), applied by the server
   administrators. Other Moodle installations behind PHP-FPM need the same setting.
+- Applying the salt change on 2026-11-11 overwrote the hand-made Apache include of the Moodle server, which held
+  `DocumentRoot /var/www/public` (needed since Moodle 5.1), and Moodle was down for a short time. The administrators
+  moved that setting to the include meant for manual edits (`digitalfabrik-ssl.conf`); salt now manages
+  `CGIPassAuth On` in the per-domain include. Lesson for later server changes: salt replaces a managed file
+  completely, so a pull request should ask for a dry run (`state.apply <state> test=True`) first.
+- First successful grade on 2026-11-11 (development setup, student, embedded): `POST /lti/results` answered `204`,
+  and the grader report of the course showed the score of the activity (87.50 of 100).

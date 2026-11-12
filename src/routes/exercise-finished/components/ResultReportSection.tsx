@@ -7,8 +7,8 @@ import type { ResultReport } from '../../../services/ltiSession'
 const Message = styled.Text<{ isProblem: boolean }>`
   text-align: center;
   margin: ${props => props.theme.spacings.md} ${props => props.theme.spacings.xl} ${props => props.theme.spacings.sm};
-  color: ${props => (props.isProblem ? props.theme.colors.incorrect : props.theme.colors.textSecondary)};
-  font-family: ${props => props.theme.fonts.contentFontRegular};
+  color: ${props => (props.isProblem ? props.theme.colors.text : props.theme.colors.textSecondary)};
+  font-family: ${props => (props.isProblem ? props.theme.fonts.contentFontBold : props.theme.fonts.contentFontRegular)};
   font-size: ${props => props.theme.fonts.defaultFontSize};
 `
 

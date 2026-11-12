@@ -418,5 +418,9 @@
     "practice": {
       "part": "Teil"
     }
+  },
+  "embeddedMode": {
+    "expired": "Deine Sitzung aus dem Kurs ist abgelaufen. Öffne Lunes im Kurs neu, damit deine Ergebnisse übertragen werden.",
+    "error": "Lunes ist gerade nicht mit dem Kurs verbunden. Lade die Seite neu oder öffne Lunes im Kurs neu, damit deine Ergebnisse übertragen werden."
   }
 }

@@ -6,6 +6,7 @@ import { PaperProvider } from 'react-native-paper'
 import { initialWindowMetrics, SafeAreaProvider } from 'react-native-safe-area-context'
 import { ThemeProvider } from 'styled-components/native'
 
+import EmbeddedModeNotice from './components/EmbeddedModeNotice'
 import theme from './constants/theme'
 import Navigator from './navigation/Navigator'
 import deepLinking from './navigation/deepLinking'
@@ -32,6 +33,7 @@ const App = (): ReactElement => {
               <TtsServiceProvider>
                 <ReducedMotionServiceProvider>
                   <EmbeddedModeProvider>
+                    <EmbeddedModeNotice />
                     <NavigationContainer linking={deepLinking}>
                       <Navigator />
                     </NavigationContainer>

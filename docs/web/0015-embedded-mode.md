@@ -46,8 +46,8 @@ not change.
     847, the URL `/jobs/219/units/849` showed unit 849, so the set could be changed by editing the URL. `setParams`
     did not correct the params of the restored route, so the screen ignores them. The address bar may keep the other
     unit ID; it has no effect.
-  - While the session loads, and if it expired or the service is unreachable, the normal navigation stays. Step d
-    shows the state; the selected set is only known from the service.
+  - While the session loads, and if it expired or the service is unreachable, the normal navigation stays; the
+    selected set is only known from the service.
 - **No sharing in the embedded mode.** The result screen hides "Ergebnisse teilen" when the app was launched from an
   LMS (any state other than `standalone`): in school, results go to the gradebook, not to friends. `ShareSection`
   (shared) reads the embedded mode; the apps are always standalone, so they keep the section.
@@ -55,8 +55,15 @@ not change.
 - **Submission state on the result screen (FR-11, FR-12).** `ExerciseFinished` shows the state returned by
   `useReportResult` below the score (`ResultReportSection`, shared): sending, submitted, the activity does not accept
   grades, session expired (open Lunes again from the course), or not submitted (finish the exercise again to resend).
-  Problems are shown in the colour for incorrect answers. The text is a polite live region, so screen readers announce
+  Problems are shown in bold dark text: the red of incorrect answers (`#ff5252`) has a contrast of only about 3.3:1
+  on the light background, below the 4.5:1 that WCAG AA asks for normal text. The text is a polite live region, so screen readers announce
   the change. Without a launch the state is `none` and nothing is shown, so the apps are unchanged.
+- **Hint for a session that cannot be used (FR-11).** If the session has expired (`401`) or lunes-lti cannot be
+  reached when the app starts, a banner above the app (`EmbeddedModeNotice`, shared, rendered in `App.tsx`) says that
+  results will not reach the course and how to fix it (open Lunes again from the course, or reload). Lunes keeps
+  working with the normal navigation, so a learner can still practise. Dark text on the light red background of the
+  theme (contrast above 4.5:1); `accessibilityRole="alert"`. Nothing is shown while loading, in the active session,
+  or standalone, so the apps are unchanged.
 - **Link back to the course (FR-13).** In the embedded mode, the header of the unit shows "Zurück zum Kurs" where the
   back button was: an HTML link (`BackToCourseLink.tsx`, used only by `HomeStackNavigator.web.tsx`) to the return URL
   of the LMS with `target="_top"`, so the LMS page replaces the whole tab instead of opening inside the iframe. Only
@@ -71,10 +78,11 @@ not change.
   URL): the header shows "Zurück zum Kurs" as a link with `target="_top"`; a URL with another unit shows the unit of
   the session; after the word choice exercise (5 of 6 correct on the first try) the app sent `{"correct":5,"total":6}`
   once and the result screen showed "Dein Ergebnis wurde an den Kurs übertragen." Not yet verified inside Moodle.
-- Still open: while the session loads, and when it has expired or the service is unreachable at start, the app shows
-  the normal navigation without a hint (FR-11 is covered only when a result is sent).
+- While the session loads (usually a fraction of a second), the normal navigation is visible before the stack switches
+  to the selected set.
 - The native navigators are unchanged; only `HomeStackNavigator.web.tsx` reads the embedded mode.
-- `App.tsx` (shared) gains one provider; on native it renders only its children.
+- `App.tsx` (shared) gains one provider and the notice; on native the provider renders only its children and the
+  notice renders nothing.
 - Verified in the browser (dev server, lunes-lti not running): a URL with `#lti_token=…` is cleaned before the app
   renders, the token is in the `sessionStorage`, `/lti/session` is requested (`504` without the service, state
   `error`); without a token no `/lti` request is made.

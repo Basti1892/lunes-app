@@ -1,4 +1,4 @@
-import { ReactElement } from 'react'
+import React, { ReactElement, ReactNode } from 'react'
 
 import { EmbeddedModeContext, useEmbeddedMode } from './embeddedModeContext'
 import type { EmbeddedMode } from './embeddedModeContext'
@@ -9,9 +9,9 @@ export type { EmbeddedMode }
 export { EmbeddedModeContext, useEmbeddedMode }
 
 export type EmbeddedModeProviderProps = {
-  children: ReactElement
+  children: ReactNode
 }
 
-const EmbeddedModeProvider = ({ children }: EmbeddedModeProviderProps): ReactElement => children
+const EmbeddedModeProvider = ({ children }: EmbeddedModeProviderProps): ReactElement => <>{children}</>
 
 export default EmbeddedModeProvider
