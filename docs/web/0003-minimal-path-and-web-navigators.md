@@ -2,7 +2,8 @@
 
 ## Status
 
-Proposed
+Accepted (implemented as described; checked against the code on 2026-11-12. `HomeStackNavigator.web.tsx` also has
+the embedded variant of 0015.)
 
 ## Context
 

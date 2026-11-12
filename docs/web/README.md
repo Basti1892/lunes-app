@@ -17,19 +17,19 @@ Add a new ADR instead of rewriting an accepted one.
 | ----------------------------------------------- | --------------------------------- | -------- |
 | [0001](0001-webpack-with-react-native-web.md)   | Webpack with react-native-web     | Accepted |
 | [0002](0002-platform-files-and-adapters.md)     | Platform files and adapters       | Accepted |
-| [0003](0003-minimal-path-and-web-navigators.md) | Minimal path and web navigators   | Proposed |
+| [0003](0003-minimal-path-and-web-navigators.md) | Minimal path and web navigators   | Accepted |
 | [0004](0004-audio-and-tts.md)                   | Audio and text-to-speech          | Accepted |
 | [0005](0005-svg-icons-with-svgr.md)             | SVG icons with SVGR               | Accepted |
 | [0006](0006-web-dependency-placement.md)        | Placement of web dependencies     | Accepted |
 | [0007](0007-backend-access-and-cors.md)         | Backend access and CORS           | Open     |
 | [0008](0008-url-linking.md)                     | URL linking                       | Accepted |
-| [0009](0009-persistence-on-web.md)              | Persistence on web                | Proposed |
+| [0009](0009-persistence-on-web.md)              | Persistence on web                | Accepted |
 | [0010](0010-typescript-dom-lib.md)              | TypeScript `dom` lib              | Accepted |
 | [0011](0011-error-reporting-web.md)             | Error reporting on web            | Accepted |
 | [0012](0012-iframe-embedding.md)                | Iframe embedding                  | Accepted |
 | [0013](0013-lti-connector-service.md)           | LTI connector as a service        | Accepted |
 | [0014](0014-lti-service-implementation.md)      | Implementation of the LTI service | Accepted |
-| [0015](0015-embedded-mode.md)                   | Embedded mode                     | Proposed |
+| [0015](0015-embedded-mode.md)                   | Embedded mode                     | Accepted |
 | [0016](0016-grade-passback.md)                  | Grade passback                    | Accepted |
 | [0017](0017-deep-linking.md)                    | Deep Linking                      | Accepted |
 | [0018](0018-time-on-task.md)                    | Time on task                      | Accepted |

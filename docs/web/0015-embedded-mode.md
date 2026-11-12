@@ -2,8 +2,9 @@
 
 ## Status
 
-Proposed (steps a, b and d of the embedded mode: session token, launch data, navigation restricted to the selected
-set, submission state and the link back to the course; result reporting in 0016)
+Accepted (steps a, b and d of the embedded mode: session token, launch data, navigation restricted to the selected
+set, submission state and the link back to the course; result reporting in 0016. Tested with launches from Moodle
+from 2026-11-10 to 2026-11-12.)
 
 ## Context
 

@@ -2,7 +2,7 @@
 
 ## Status
 
-Proposed
+Accepted (implemented as described; checked on 2026-11-12: the app's keys are in `localStorage` of the app origin)
 
 ## Context
 
@@ -21,3 +21,5 @@ version 8. User vocabulary stores images and recordings on the file system (`@dr
 - In a third-party iframe, browsers partition storage by top-level site. Safari may delete it after 7 days without
   interaction. This is acceptable for the prototype; a server-side or LMS-side store would be needed for durable
   progress.
+- After an LTI launch, the authoritative result is the grade in the LMS gradebook (0016), not the progress stored in
+  the browser.
