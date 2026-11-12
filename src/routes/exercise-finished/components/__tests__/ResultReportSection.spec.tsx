@@ -16,6 +16,7 @@ describe('ResultReportSection', () => {
     'sending',
     'submitted',
     'notGraded',
+    'preview',
     'expired',
     'error',
   ])('should show the state %s', type => {

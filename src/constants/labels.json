@@ -186,6 +186,7 @@
       "sending": "Dein Ergebnis wird an den Kurs übertragen …",
       "submitted": "Dein Ergebnis wurde an den Kurs übertragen.",
       "notGraded": "Diese Aktivität im Kurs nimmt keine Ergebnisse an.",
+      "preview": "Du hast Lunes als Lehrkraft geöffnet. Dein Ergebnis wird nicht an den Kurs übertragen.",
       "expired": "Deine Sitzung ist abgelaufen. Öffne Lunes im Kurs neu, damit dein Ergebnis übertragen wird.",
       "error": "Dein Ergebnis konnte nicht an den Kurs übertragen werden. Mach die Übung später noch einmal, dann wird es erneut gesendet."
     }

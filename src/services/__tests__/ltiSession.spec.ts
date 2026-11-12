@@ -99,12 +99,14 @@ describe('ltiSession', () => {
     })
 
     it.each([
-      [401, 'expired'],
-      [409, 'notGraded'],
-      [502, 'error'],
-    ])('should map status %d to %s', async (status, type) => {
+      [401, {}, 'expired'],
+      [409, { error: 'not_graded' }, 'notGraded'],
+      [409, { error: 'preview' }, 'preview'],
+      [409, 'not json', 'notGraded'],
+      [502, {}, 'error'],
+    ])('should map status %d with %j to %s', async (status, body, type) => {
       await expect(
-        sendResult('abc', { correct: 1, total: 1 }, jest.fn().mockResolvedValue(response(status, {}))),
+        sendResult('abc', { correct: 1, total: 1 }, jest.fn().mockResolvedValue(response(status, body))),
       ).resolves.toEqual({ type })
     })
 

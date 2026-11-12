@@ -101,8 +101,19 @@ export type ResultReport =
   | { type: 'submitted' }
   // The activity in the LMS does not accept grades
   | { type: 'notGraded' }
+  // Launched by a teacher (or anyone who is not a learner): results are not sent (docs/web/0020-course-role.md)
+  | { type: 'preview' }
   | { type: 'expired' }
   | { type: 'error' }
+
+const readError = async (response: Response): Promise<unknown> => {
+  try {
+    const body: unknown = await response.json()
+    return typeof body === 'object' && body !== null && 'error' in body ? body.error : null
+  } catch {
+    return null
+  }
+}
 
 export const sendResult = async (
   token: string,
@@ -121,7 +132,10 @@ export const sendResult = async (
     if (response.status === HTTP_UNAUTHORIZED) {
       return { type: 'expired' }
     }
-    return response.status === HTTP_CONFLICT ? { type: 'notGraded' } : { type: 'error' }
+    if (response.status === HTTP_CONFLICT) {
+      return (await readError(response)) === 'preview' ? { type: 'preview' } : { type: 'notGraded' }
+    }
+    return { type: 'error' }
   } catch {
     return { type: 'error' }
   }
