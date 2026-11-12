@@ -31,6 +31,7 @@ Add a new ADR instead of rewriting an accepted one.
 | [0014](0014-lti-service-implementation.md)      | Implementation of the LTI service | Accepted |
 | [0015](0015-embedded-mode.md)                   | Embedded mode                     | Proposed |
 | [0016](0016-grade-passback.md)                  | Grade passback                    | Accepted |
+| [0017](0017-deep-linking.md)                    | Deep Linking                      | Proposed |
 
 ## Implementation plan (small, testable steps)
 
