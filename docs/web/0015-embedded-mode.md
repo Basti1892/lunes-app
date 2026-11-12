@@ -79,6 +79,8 @@ not change.
   of the LMS with `target="_top"`, so the LMS page replaces the whole tab instead of opening inside the iframe. Only
   `http` and `https` URLs are linked (lunes-lti checks the same); without a return URL the header stays empty. A link
   rather than a script: it works with the keyboard, shows its target, and needs no access to the parent window.
+  The result screen gets no link of its own (decided by the author of the thesis on 2026-11-12): it leads back to the
+  unit, whose header has the link, and the course page around the iframe stays usable with its own navigation.
 
 ## Consequences
 
