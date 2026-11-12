@@ -24,6 +24,10 @@ HTTPS request. It caches the whole launch token, which in Moodle contains the us
 - **Storage: SQLite** through the Python standard library, one file in the data directory: a launch data storage for
   PyLTI1p3 (nonce, state, cached launch; two hours) and a `launches` table (pseudonymous `sub`, course, resource
   link, AGS line item, job and unit). No Redis or cache server.
+- **Nonce used once:** PyLTI1p3 2.0 only checks that the nonce of a launch exists in the launch data storage and keeps
+  it until it expires, so the same id_token and state could be launched again from the same browser within two hours.
+  lunes-lti deletes the nonce once a launch has passed all checks (`SessionService.consume_nonce`, called from
+  `MessageLaunch.save_launch_data`). Found while writing the tests for TC-09 on 2026-11-12 (NFR-03).
 - **Configuration: a TOML file** without secrets (`base_url`, `data_dir`, token lifetime, one `[[platforms]]` entry per
   LMS registration). Salt can render it from the pillar.
 - **Key material generated at runtime** in the data directory: the tool's RSA key pair (published at `/lti/jwks`) and
@@ -63,3 +67,6 @@ HTTPS request. It caches the whole launch token, which in Moodle contains the us
 - Safari partitions cookies differently and is not supported for local development over `http://localhost`.
 - Deployment (venv, gunicorn as a systemd service, nginx `location /lti/`, config from the pillar) is added to the
   `lunes-webapp` salt state in the bundled pull request.
+- Automated end-to-end tests (`keys` marker) show that a launch signed with another key and a replayed launch are
+  rejected without storing a launch (TC-09), next to the existing tests for missing login cookies and invalid session
+  tokens.
