@@ -40,7 +40,7 @@ sent last.
   reachable. There is no retry and no offline buffer (FR-08), as stated in 0013.
 - The app trusts itself for the result: a learner who manipulates the requests in the browser can send any score.
   Acceptable for a practice tool; graded exams would need the exercise to run on the server.
-- Time on task (FR-16): the score carries only the finish time. The start time of the exercise is not tracked yet.
+- Time on task (FR-16): the score also carries the duration of the attempt, see 0018.
 - Launches made before the AGS service was switched on in Moodle carry no AGS claim; their results get `not_graded`.
   The activity has to be launched again.
 - First test on 2026-11-11 (development setup): Moodle answered the token request with `404`, because the tool was

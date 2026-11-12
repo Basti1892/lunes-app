@@ -2,7 +2,7 @@
 
 ## Status
 
-Accepted (first activity created with Deep Linking in Moodle and launched on 2026-11-12)
+Accepted (first activity created with Deep Linking in Moodle, launched and graded on 2026-11-12)
 
 ## Context
 
@@ -45,4 +45,4 @@ profession and set screens).
 - One set per activity, also if the LMS accepts several items.
 - Moodle registration: "Supports Deep Linking" on, "Content Selection URL" `<base>/lti/launch`.
 - Tested with the simulated LMS of lunes-lti (unit tests, end-to-end test with signature, `kid`, content and
-  `data`) and in Moodle: activity created with "Select content" and launched.
+  `data`) and in Moodle: activity created with "Select content", launched, and the grade arrived in the gradebook.

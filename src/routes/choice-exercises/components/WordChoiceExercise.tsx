@@ -35,6 +35,7 @@ import { saveExerciseProgress } from '../../../services/storageUtils'
 import { SingleChoice } from './SingleChoice'
 
 const MAX_ANSWERS = 4
+const MILLISECONDS_PER_SECOND = 1000
 
 const generateFalseAnswers = (
   vocabularyItems: VocabularyItem[],
@@ -114,6 +115,8 @@ const WordChoiceExercise = ({
   const storageCache = useStorageCache()
   const [state, setState] = useState<State>(initializeState(vocabularyItems))
   const [selectedAnswer, setSelectedAnswer] = useState<Answer | null>(null)
+  // Repeating the exercise opens the screen again, so each attempt has its own start
+  const [startedAt] = useState(Date.now)
   const { vocabularyItem, numberOfTries, result } = getAtIndex(state.results, state.currentWord)
   const repetitionService = useRepetitionService()
 
@@ -164,6 +167,7 @@ const WordChoiceExercise = ({
       ...route.params,
       exercise: StandardExerciseKeys.wordChoiceExercise,
       results,
+      durationSeconds: Math.round((Date.now() - startedAt) / MILLISECONDS_PER_SECOND),
     })
   }
 

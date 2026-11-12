@@ -10,6 +10,7 @@ export type ReportResultParams = {
   exercise: StandardExerciseKey
   results: VocabularyItemResult[]
   unitId: UnitId | null
+  durationSeconds?: number
 }
 
 const notReported: ResultReport = { type: 'none' }

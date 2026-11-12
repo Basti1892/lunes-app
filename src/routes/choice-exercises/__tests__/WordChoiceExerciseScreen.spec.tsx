@@ -153,7 +153,9 @@ describe('WordChoiceExerciseScreen', () => {
   })
 
   it('should navigate to ExerciseFinished after completing all words', async () => {
+    const dateNow = jest.spyOn(Date, 'now').mockReturnValue(1_000_000)
     const { getByText } = renderScreen()
+    dateNow.mockReturnValue(1_000_000 + 95_400)
 
     selectAnswerAndPressNext(getByText, 'Spachtel')
     selectAnswerAndPressNext(getByText, 'Auto')
@@ -163,7 +165,13 @@ describe('WordChoiceExerciseScreen', () => {
     expect(getByText(getLabels().exercises.showResults)).toBeVisible()
     fireEvent.press(getByText(getLabels().exercises.showResults))
 
-    await waitFor(() => expect(navigation.popTo).toHaveBeenCalledWith('ExerciseFinished', expect.anything()))
+    await waitFor(() =>
+      expect(navigation.popTo).toHaveBeenCalledWith(
+        'ExerciseFinished',
+        expect.objectContaining({ exercise: StandardExerciseKeys.wordChoiceExercise, durationSeconds: 95 }),
+      ),
+    )
+    dateNow.mockRestore()
   })
 
   it('should repeat a word after an incorrect answer', async () => {

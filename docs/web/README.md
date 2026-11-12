@@ -32,6 +32,7 @@ Add a new ADR instead of rewriting an accepted one.
 | [0015](0015-embedded-mode.md)                   | Embedded mode                     | Proposed |
 | [0016](0016-grade-passback.md)                  | Grade passback                    | Accepted |
 | [0017](0017-deep-linking.md)                    | Deep Linking                      | Accepted |
+| [0018](0018-time-on-task.md)                    | Time on task                      | Proposed |
 
 ## Implementation plan (small, testable steps)
 

@@ -90,6 +90,8 @@ export type ExerciseResult = {
   // Words answered correctly on the first try, as shown on the result screen
   correct: number
   total: number
+  // Time on task of the attempt (docs/web/0018-time-on-task.md)
+  durationSeconds?: number
 }
 
 // State of sending a result to the LMS gradebook (docs/web/0016-grade-passback.md)

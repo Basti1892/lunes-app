@@ -56,6 +56,13 @@ describe('useReportResult (web)', () => {
     expect(JSON.parse(fetchMock.mock.calls[0][1].body)).toEqual({ correct: 2, total: 4 })
   })
 
+  it('should send the duration of the attempt', async () => {
+    const { result } = renderReport(active, { ...params, durationSeconds: 95 })
+
+    await waitFor(() => expect(result.current).toEqual({ type: 'submitted' }))
+    expect(JSON.parse(fetchMock.mock.calls[0][1].body)).toEqual({ correct: 2, total: 4, durationSeconds: 95 })
+  })
+
   it('should not send anything when standalone', () => {
     const { result } = renderReport({ type: 'standalone' }, params)
 

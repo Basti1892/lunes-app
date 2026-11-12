@@ -17,8 +17,8 @@ const readToken = (): string | null => {
 
 // After an LTI launch, the result of the word choice exercise of the selected unit goes to the LMS gradebook:
 // words correct on the first try out of all words, like on the result screen (docs/web/0016-grade-passback.md).
-// Each finished attempt is sent once; the LMS keeps the latest.
-const useReportResult = ({ exercise, results, unitId }: ReportResultParams): ResultReport => {
+// Each finished attempt is sent once with its duration (docs/web/0018-time-on-task.md); the LMS keeps the latest.
+const useReportResult = ({ exercise, results, unitId, durationSeconds }: ReportResultParams): ResultReport => {
   const embeddedMode = useEmbeddedMode()
   const [report, setReport] = useState<ResultReport>({ type: 'none' })
   // Survives the double effect of React's strict mode, so a result is only sent once
@@ -43,10 +43,10 @@ const useReportResult = ({ exercise, results, unitId }: ReportResultParams): Res
     isSent.current = true
     setReport({ type: 'sending' })
     const correct = results.filter(result => result.numberOfTries === 1).length
-    sendResult(token, { correct, total: results.length })
+    sendResult(token, { correct, total: results.length, durationSeconds })
       .then(setReport)
       .catch(() => setReport({ type: 'error' }))
-  }, [isGradedResult, results])
+  }, [isGradedResult, results, durationSeconds])
 
   return report
 }

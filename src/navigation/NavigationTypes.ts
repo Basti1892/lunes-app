@@ -36,6 +36,8 @@ export type SpecialExercisesParams = {
 type ResultParams = ExerciseParams & {
   exercise: StandardExerciseKey
   results: VocabularyItemResult[]
+  // Time from opening the exercise to finishing it, for the LMS (docs/web/0018-time-on-task.md)
+  durationSeconds?: number
 }
 
 export type BottomTabParams = {

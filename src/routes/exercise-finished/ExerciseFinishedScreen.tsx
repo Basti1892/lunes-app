@@ -45,9 +45,19 @@ const ExerciseFinishedScreen = ({ navigation, route }: ExerciseFinishedScreenPro
   const correctOnFirstAttempt = results.filter(doc => doc.numberOfTries === 1)
   const score = calculateScore(results)
   // Sends the result to the LMS after an LTI launch (web only)
-  const resultReport = useReportResult({ exercise, results, unitId: route.params.unitId })
+  const resultReport = useReportResult({
+    exercise,
+    results,
+    unitId: route.params.unitId,
+    durationSeconds: route.params.durationSeconds,
+  })
 
-  const { exercise: notNeededForNavigation1, results: notNeededForNavigation2, ...navigationParams } = route.params
+  const {
+    exercise: notNeededForNavigation1,
+    results: notNeededForNavigation2,
+    durationSeconds: notNeededForNavigation3,
+    ...navigationParams
+  } = route.params
   const repeatExercise = (): void => navigation.popTo(EXERCISES[exercise].screen, { ...navigationParams })
 
   const wasSuccessful = score > SCORE_THRESHOLD_POSITIVE_FEEDBACK
