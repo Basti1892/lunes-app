@@ -35,6 +35,7 @@ Add a new ADR instead of rewriting an accepted one.
 | [0018](0018-time-on-task.md)                    | Time on task                      | Accepted |
 | [0019](0019-withdrawn-vocabulary-sets.md)       | Withdrawn vocabulary sets         | Accepted |
 | [0020](0020-course-role.md)                     | Course role                       | Accepted |
+| [0021](0021-lti-services.md)                    | LTI services used                 | Accepted |
 
 ## Implementation plan (small, testable steps)
 
