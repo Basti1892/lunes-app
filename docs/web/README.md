@@ -36,6 +36,7 @@ Add a new ADR instead of rewriting an accepted one.
 | [0019](0019-withdrawn-vocabulary-sets.md)       | Withdrawn vocabulary sets         | Accepted |
 | [0020](0020-course-role.md)                     | Course role                       | Accepted |
 | [0021](0021-lti-services.md)                    | LTI services used                 | Accepted |
+| [0022](0022-per-activity-settings.md)           | Settings per activity             | Accepted |
 
 ## Implementation plan (small, testable steps)
 
